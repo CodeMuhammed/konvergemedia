@@ -33,8 +33,28 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
      //@TODO implement a better validation rule.s
      return function(data){
          if(angular.isArray(data)){
-             var roles = ['learnerNG' , 'learnerSA' , 'trainerNG' ,'trainerSA'];
+
+             //Capitalize a word
+             function Capitalize(rawWord){
+                 var result = '';
+                 //@TODDO
+                 if(rawWord.length == 0){
+                      return result;
+                 }
+                 if(rawWord.length == 1){
+                     return angular.uppercase(rawWord);
+                 }
+                 else{
+                    result = angular.uppercase(rawWord[0]);
+                    for(var i=1; i<rawWord.length; i++){
+                        result+=angular.lowercase(rawWord[i]);
+                    }
+                 }
+                 return result;
+             }
+
              //data validator
+             var roles = ['learnerNG' , 'learnerSA' , 'trainerNG' ,'trainerSA'];
              function isValidPerson(personStr){
                var personObj = {status:'pending'};
                var personDataArr = personStr.split(',');
@@ -44,10 +64,10 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
                var validlastName =  /^[a-zA-Z]*$/.test(personDataArr[1]);
                var validemail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(personDataArr[2]);
                var validRole = roles.indexOf(personDataArr[3])>=0;
-               
+
                if(validFirstName && validlastName && validemail && validRole){
-                    personObj.firstname = personDataArr[0];
-                    personObj.lastname = personDataArr[1];
+                    personObj.firstname = Capitalize(personDataArr[0]);
+                    personObj.lastname = Capitalize(personDataArr[1]);
                     personObj.email = personDataArr[2];
                     personObj.role = personDataArr[3];
                     //
@@ -172,7 +192,6 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
     $scope.certImg = 'img/test.png';
     $scope.error = {msg:'No error at this time' , status:false};
 
-
     ////
     $scope.sendCert = function(person){
         $scope.sendingCert = true;
@@ -217,9 +236,10 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
 
       //
       $scope.sendBulkMails = function(){
+           $scope.sendingCerts = true;
            (function worker(index){
                if($scope.decodedArr.valid.length <=index){
-                   alert('All mails have been sent out');
+                   $scope.sendingCerts = false;
                }
                else{
                  //Send out certificates to contacts in mailing list

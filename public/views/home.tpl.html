@@ -11,101 +11,105 @@
     </div>
 
 </div>
-
-<div class="col-sm-8 col-sm-offset-2" style="padding:0">
-  	<!--BULK MAILER VIEW-->
-  	<!--BULK MAILER VIEW-->
-		 <div class="col-xs-12" ng-show="active == 'bulk mail'" ng-controller="bulkMailerController" style="padding-left:0">
-          <h2 style="color:#297DC0">Upload a .txt or .csv file containing user details</h2>
-          <h4>
-          <i>
-              Note:when submitting a .txt file, user details should be in the format per line
-              <br>
-              <code>firstname,lastname,email,role</code>
-              <br>
-           </i>
-
-        </h4>
-					<span>
-						   <input type="file" ng-model="file.data" file-select="data" file-loaded="myLoaded()" file-error="myError($error)" file-progress="myProgress($total,$loaded)">
-					</span>
-          <hr>
-          {{rawDataArr}}
-          <div class="col-xs-12" style="padding:0" ng-show="decodedArr">
+<div class="col-xs-12">
+    <div class="col-sm-8 col-sm-offset-2" style="padding:0">
+      	<!--BULK MAILER VIEW-->
+      	<!--BULK MAILER VIEW-->
+    		 <div class="col-xs-12" ng-show="active == 'bulk mail'" ng-controller="bulkMailerController" style="padding-left:0">
+              <h2 style="color:#297DC0">Upload a .txt or .csv file containing user details</h2>
               <h4>
-                  {{decodedArr.valid.length+decodedArr.invalid.length}} user data uploaded. {{decodedArr.invalid.length}} formatting errors detected
-                  <button class="btn btn-sm btn-primary pull-right" style="border-radius:0" ng-click="sendBulkMails()">Send certificates</button>
-              </h4>
+              <i>
+                  Note:when submitting a .txt file, user details should be in the format per line
+                  <br>
+                  <code>firstname,lastname,email,role</code>
+                  <br>
+               </i>
+
+            </h4>
+    					<span>
+    						   <input type="file" ng-model="file.data" file-select="data" file-loaded="myLoaded()" file-error="myError($error)" file-progress="myProgress($total,$loaded)">
+    					</span>
               <hr>
-              <table class="table table-striped table-responsive">
-                   <thead>
-                        <th>First Name</th>
-                        <th>Last Name</th>
-                        <th>Email</th>
-                        <th>Role</th>
-                        <th>Status</th>
-                   </thead>
-                   <tbody>
-                        <tr ng-repeat="data in decodedArr.valid">
-                            <td>{{data.firstname}}</td>
-                            <td>{{data.lastname}}</td>
-                            <td>{{data.email}}</td>
-                              <td>{{data.role}}</td>
-                            <td>{{data.status}}</td>
-                        </tr>
-                   </tbody>
-              </table>
-          </div>
-		 </div>
-
-		 <!--MANUAL MAIL VIEW-->
-		 <!--MANUAl MAIL VIEW-->
-		 <div class="col-xs-12" ng-show="active == 'manual mail'" ng-controller="manualMailerController" style="padding:0">
-			    <h2>Send mails out manually</h2>
-			    <div class="col-sm-6" style="padding-left:0">
-						   <form name="manualMail" novalidate ng-submit="sendCert(person)">
-									 <div class="form-group col-xs-12 " style="padding:0">
-											 <label>Firstname:</label>
-											 <input name="firstname" type="text" class="form-control"
-											 required ng-model="person.firstname" placeholder="Enter first name">
-									 </div>
-
-									 <div class="form-group col-xs-12 " style="padding:0">
-											<label>Lastname:</label>
-											<input name="lastname" type="text" class="form-control"
-											required ng-model="person.lastname" placeholder="Enter last name">
-									 </div>
-
-									 <div class="form-group col-xs-12 " style="padding:0">
-											<label>Email:</label>
-											<input name="email" type="email" class="form-control"
-											required ng-model="person.email" placeholder="Enter email address">
-									 </div>
-                   <div class="form-group col-xs-12 " style="padding:0">
-                      <label>participant's role:&nbsp;</label>
-                      <button type="button" class="btn btn-default" ng-model="person.role"
-                         data-html="0" data-toggle="true" reqiured
-                         bs-options="role as role for role in roles" bs-select>
-                         <span class="caret"></span>
+              {{rawDataArr}}
+              <div class="col-xs-12" style="padding:0" ng-show="decodedArr">
+                  <h4>
+                      {{decodedArr.valid.length+decodedArr.invalid.length}} user data uploaded. {{decodedArr.invalid.length}} formatting errors detected
+                      <button class="btn btn-sm btn-primary pull-right" style="border-radius:0" ng-click="sendBulkMails()" ng-disabled="sendingCerts">
+                          <span ng-show="!sendingCerts">Send certificates</span>
+                          <span ng-show="sendingCerts"><i class="icon fa fa-spinner fa-spin"></i> Sending certificates ....</span>
                       </button>
-									 </div>
+                  </h4>
+                  <hr>
+                  <table class="table table-striped table-responsive">
+                       <thead>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Status</th>
+                       </thead>
+                       <tbody>
+                            <tr ng-repeat="data in decodedArr.valid">
+                                <td>{{data.firstname}}</td>
+                                <td>{{data.lastname}}</td>
+                                <td>{{data.email}}</td>
+                                  <td>{{data.role}}</td>
+                                <td>{{data.status}}</td>
+                            </tr>
+                       </tbody>
+                  </table>
+              </div>
+    		 </div>
 
-									 <div class="form-group col-xs-12 " style="padding:0">
-										  <button type="submit" class="btn btn-primary btn-block"
-  											 ng-disabled="manualMail.$invalid || sendingCert">
-  											  <span ng-show="!sendingCert">Send certificate</span>
-													<span ng-show="sendingCert">loading ....</span>
-  									  </button>
-									 </div>
-								</form>
-			    </div>
-					<div class="col-sm-6" style="padding:0">
-						    <div class="col-xs-12" style="padding-right:0">
-									    <div class="alert alert-warning" ng-show="error.status">
-									    	   {{error.msg}}
-									    </div>
-						    	    <img ng-src="{{certImg}}" alt="certificate preview" style="width:100%; height:20em" ng-hide="error.status"/>
-						    </div>
-					</div>
-		 </div>
+    		 <!--MANUAL MAIL VIEW-->
+    		 <!--MANUAl MAIL VIEW-->
+    		 <div class="col-xs-12" ng-show="active == 'manual mail'" ng-controller="manualMailerController" style="padding:0">
+    			    <h2>Send mails out manually</h2>
+    			    <div class="col-sm-6" style="padding-left:0">
+    						   <form name="manualMail" novalidate ng-submit="sendCert(person)">
+    									 <div class="form-group col-xs-12 " style="padding:0">
+    											 <label>Firstname:</label>
+    											 <input name="firstname" type="text" class="form-control"
+    											 required ng-model="person.firstname" placeholder="Enter first name">
+    									 </div>
+
+    									 <div class="form-group col-xs-12 " style="padding:0">
+    											<label>Lastname:</label>
+    											<input name="lastname" type="text" class="form-control"
+    											required ng-model="person.lastname" placeholder="Enter last name">
+    									 </div>
+
+    									 <div class="form-group col-xs-12 " style="padding:0">
+    											<label>Email:</label>
+    											<input name="email" type="email" class="form-control"
+    											required ng-model="person.email" placeholder="Enter email address">
+    									 </div>
+                       <div class="form-group col-xs-12 " style="padding:0">
+                          <label>participant's role:&nbsp;</label>
+                          <button type="button" class="btn btn-default" ng-model="person.role"
+                             data-html="0" data-toggle="true" reqiured
+                             bs-options="role as role for role in roles" bs-select>
+                             <span class="caret"></span>
+                          </button>
+    									 </div>
+
+    									 <div class="form-group col-xs-12 " style="padding:0">
+    										  <button type="submit" class="btn btn-primary btn-block"
+      											 ng-disabled="manualMail.$invalid || sendingCert">
+      											  <span ng-show="!sendingCert">Send certificate</span>
+    													<span ng-show="sendingCert"><i class="icon fa fa-spinner fa-spin"></i> loading ....</span>
+      									  </button>
+    									 </div>
+    								</form>
+    			    </div>
+    					<div class="col-sm-6" style="padding:0">
+    						    <div class="col-xs-12" style="padding-right:0">
+    									    <div class="alert alert-warning" ng-show="error.status">
+    									    	   {{error.msg}}
+    									    </div>
+    						    	    <img ng-src="{{certImg}}" alt="certificate preview" style="width:100%; height:20em" ng-hide="error.status"/>
+    						    </div>
+    					</div>
+    		 </div>
+    </div>
 </div>
