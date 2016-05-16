@@ -72,7 +72,7 @@ module.exports = function(){
 		   subject: subject,
 		   'h:Reply-To': 'certificate@digifyafrica.com',
 		   html: htmlData,
-		   attachment: attachment
+		   attachment: attachment // could also be in an array format
 		};
 
 		nodemailerMailgun.sendMail(options, function (err, info) {
