@@ -9,6 +9,7 @@ module.exports = function(emailClient , certClient){
 
 	//
 	function getCert(person, cb){
+		 console.log('getting certificate for', person.firstname , person.lastname);
 	   var dirNamedFile = path.join(__dirname , 'pdf' , person.firstname+person.lastname+person.role);
 		 var dirImgFile = path.join(__dirname , '../' , 'public' ,'img' , person.firstname+person.lastname+person.role);
 	   certClient.getCert(person, dirNamedFile  , dirImgFile , function(err , cert , certImg){
@@ -23,6 +24,7 @@ module.exports = function(emailClient , certClient){
 
 	//
 	function sendEmail(person , attachment , cb){
+		 console.log('sending certificate to', person.firstname , person.lastname);
 		 var htmlData = '<b>Congratulations '+person.firstname+' '+person.lastname+'</b>, <span>your Digify Bytes certificate is here!</span>';
 		 var attachment = attachment;
 		 var subject = 'Digify Bytes Certificate';
