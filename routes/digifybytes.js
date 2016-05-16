@@ -63,7 +63,7 @@ module.exports = function(emailClient , certClient){
 	router.route('/viewCert')
 	  .get(function(req , res){
 		   //init query object to default or with values from query string parameters
-			 var baseUrl = 'http://localhost:4000/';
+			 var baseUrl = process.env.NODE_ENV == 'production'? 'http://digifyBytes.herokuapp.com/' : 'http://localhost:4000/';
 			 var certUrl = '';
 			 var position= '';
 			 var color = '';

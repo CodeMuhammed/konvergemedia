@@ -1,6 +1,7 @@
 //import spookyjs
 var Spooky = require('spooky');
 var path = require('path');
+var baseUrl = process.env.NODE_ENV == 'production'? 'http://digifyBytes.herokuapp.com/' : 'http://localhost:4000/';
 module.exports = function(){
 	//
 	function initSpooky(person, dirNamedFile, dirImgFile , cb){
@@ -25,14 +26,16 @@ module.exports = function(){
 
 				});
 			});
-			spooky.thenOpen('http://localhost:4000/digifyBytes/viewCert?'+'firstname='+person.firstname+'&'+'lastname='+person.lastname+'&'+'role='+person.role);
+			spooky.thenOpen(baseUrl+'digifyBytes/viewCert?'+'firstname='+person.firstname+'&'+'lastname='+person.lastname+'&'+'role='+person.role);
 
 			spooky.then([{DNF:dirNamedFile , DIF:dirImgFile} , function(){
 				this.waitForSelector('div.cert' , function(){
-				  this.capture(DNF+'.pdf');
-					this.capture(DIF+'.jpg');
-				  this.emit('done' , 'screenshot captured');
-			    });
+				    this.capture(DNF+'.pdf');
+					  this.capture(DIF+'.jpg');
+				    this.emit('done' , 'screenshot captured');
+			    } , function(){
+						 this.emit('error' , 'screenshot captured');
+					});
 			}]);
 
 			spooky.run();

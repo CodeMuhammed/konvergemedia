@@ -33,22 +33,39 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
      //@TODO implement a better validation rule.s
      return function(data){
          if(angular.isArray(data)){
-            console.log(data);
+             var roles = ['learnerNG' , 'learnerSA' , 'trainerNG' ,'trainerSA'];
+             //data validator
+             function isValidPerson(personStr){
+               var personObj = {status:'pending'};
+               var personDataArr = personStr.split(',');
+
+               //test cases
+               var validFirstName = /^[a-zA-Z]*$/.test(personDataArr[0]);
+               var validlastName =  /^[a-zA-Z]*$/.test(personDataArr[1]);
+               var validemail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(personDataArr[2]);
+               var validRole = roles.indexOf(personDataArr[3])>=0;
+               
+               if(validFirstName && validlastName && validemail && validRole){
+                    personObj.firstname = personDataArr[0];
+                    personObj.lastname = personDataArr[1];
+                    personObj.email = personDataArr[2];
+                    personObj.role = personDataArr[3];
+                    //
+                    return personObj;
+               }
+               else{
+                 return -1;
+               }
+             }
+
              var result = {
                  valid : [],
                  invalid:[]
              };
              for(var i=0; i<data.length; i++){
-                 var userDataArr = data[i].split(',');
-                 var userDataObj = {};
-                 if(userDataArr.length == 4){
-                     userDataObj.firstname = userDataArr[0];
-                     userDataObj.lastname = userDataArr[1];
-                     userDataObj.email = userDataArr[2];
-                     userDataObj.role = userDataArr[3];
-                     userDataObj.status = 'pending';
-                     //
-                     result.valid.push(userDataObj);
+                 var validPerson = isValidPerson(data[i]);
+                 if(validPerson !== -1){
+                     result.valid.push(validPerson);
                  }
                  else{
                      if(data[i].trim().length!=0){
