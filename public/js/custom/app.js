@@ -30,7 +30,7 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
 
 //Filter to convert user data in bulk upload into nicely formatted array of json objects
 .filter('mailFormatter' , function(){
-     //@todo use a map function later for efficiency
+     //@TODO implement a better validation rule.s
      return function(data){
          if(angular.isArray(data)){
             console.log(data);
@@ -138,7 +138,7 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
       ];
 
       //
-      $scope.active = $scope.views[0];
+      $scope.active = $scope.views[1];
 
       //
       $scope.setView = function(view){
@@ -156,7 +156,7 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
     $scope.error = {msg:'No error at this time' , status:false};
 
 
-    //
+    ////
     $scope.sendCert = function(person){
         $scope.sendingCert = true;
         manualMailer.sendCert(person).then(
@@ -180,7 +180,7 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
 })
 
 //Bulk mailer controller
-.controller('bulkMailerController' , function($scope , $window , $timeout , $filter){
+.controller('bulkMailerController' , function($scope , $window , $timeout , $filter , manualMailer){
       $scope.file = {};
       $scope.myLoaded = function(){
            $timeout(function(){
@@ -205,11 +205,17 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
                    alert('All mails have been sent out');
                }
                else{
-                   $timeout(function(){
-                       //Mocking sending of emails
-                       $scope.decodedArr.valid[index].status = 'sent';
-                       worker(++index);
-                   } , 3000);
+                 //Send out certificates to contacts in mailing list
+                 manualMailer.sendCert($scope.decodedArr.valid[index]).then(
+                     function(certImg){
+                        $scope.decodedArr.valid[index].status = 'sent';
+                        worker(++index);
+                     },
+                     function(err){
+                        $scope.decodedArr.valid[index].status = 'failed';
+                        worker(++index);
+                     }
+                 );
                }
            })(0);
       }

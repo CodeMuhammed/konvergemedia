@@ -1,4 +1,0 @@
-DTCA - trainerNG
-DTCSA - trainerSA
-DSCA - learnerNG
-DSCSA - learnerSA

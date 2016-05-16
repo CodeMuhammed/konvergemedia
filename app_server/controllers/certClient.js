@@ -28,7 +28,7 @@ module.exports = function(){
 			spooky.thenOpen('http://localhost:4000/digifyBytes/viewCert?'+'firstname='+person.firstname+'&'+'lastname='+person.lastname+'&'+'role='+person.role);
 
 			spooky.then([{DNF:dirNamedFile , DIF:dirImgFile} , function(){
-				this.wait(1000 , function(){
+				this.waitForSelector('div.cert' , function(){
 				  this.capture(DNF+'.pdf');
 					this.capture(DIF+'.jpg');
 				  this.emit('done' , 'screenshot captured');
@@ -43,7 +43,7 @@ module.exports = function(){
 			if (stack) {
 				console.log('this here '+stack);
 			}
-
+      console.log('Here');
 			return cb(stack||e , null);
 		});
 
@@ -63,7 +63,7 @@ module.exports = function(){
 				return cb(err , null);
 			}
 			else{
-				return cb(null , dirNamedFile+'.pdf' , dirImgFile+'.png');
+				return cb(null , dirNamedFile+'.pdf' , dirImgFile+'.jpg');
 			}
 		});
 	}
