@@ -11348,7 +11348,6 @@ button.close {
   height: 25px;
 }
 body {
-  background: url('../img/bg.png');
   min-height: 60em;
   overflow: auto;
 }

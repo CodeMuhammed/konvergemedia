@@ -43,12 +43,12 @@
 @import "modals.less";
 @import "tooltip.less";
 @import "popovers.less";
-@import "carousel.less"; 
+@import "carousel.less";
 
 // Utility classes
 @import "utilities.less";
 @import "responsive-utilities.less";
-@import "hover.less"; 
+@import "hover.less";
 
 
 body{
@@ -56,8 +56,6 @@ body{
       outline:none;
    }
    
-   //background-color: lighten(#CCCCFF ,0%);
-   background: url('../img/bg.png');
    min-height:60em;
    overflow:auto;
    .loader {
@@ -66,7 +64,7 @@ body{
      margin-left:50%;
      transform: translate(-50%, -0%);
      color: #880000;
-     background-color: rgba(255 , 255  , 102 , .9) !important; 
+     background-color: rgba(255 , 255  , 102 , .9) !important;
      box-shadow: 0 6px 12px rgba(0,0,0,.175);
      z-index:2000000;
      border-radius:0 0 3px 3px;
@@ -133,7 +131,7 @@ body{
   }
 
   #body{
-     h1{ 
+     h1{
         margin-bottom:2em;
      }
      button{
@@ -150,7 +148,7 @@ body{
 
 nav {
     background:#fff !important;
-    border-bottom:2px solid #ccc; 
+    border-bottom:2px solid #ccc;
     @media (max-width: @screen-sm-max) {
         padding-right:0 !important;
     }
@@ -172,7 +170,7 @@ nav {
    li {
       a{
          font-weight: bolder;
-         font-size : 1.3em; 
+         font-size : 1.3em;
       }
       &:hover {
           a{
@@ -182,7 +180,7 @@ nav {
    }
    .nav-active{
       a{
-         color:red !important; 
+         color:red !important;
       }
    }
     @media (min-width: @screen-sm-max) {
@@ -203,7 +201,7 @@ nav {
       text-align:center;
       >li{
         padding:.5em .3em;
-        white-space:nowrap; 
+        white-space:nowrap;
         overflow:hidden;
         width:33.3333333%;
         float:left;
@@ -214,24 +212,24 @@ nav {
         }
 
       }
-     
+
    }
    @media (max-width: @screen-sm-max) {
         z-index:1000;
-    } 
-} 
+    }
+}
 
 .main-view-area{
    min-height:60em;
    overflow:auto;
 
    .alert-msg {
-        font-weight:bolder; 
+        font-weight:bolder;
         margin-bottom:0;
         margin-top:50px;
         @media (max-width: @screen-sm-max) {
             margin-top:10px;
-        } 
+        }
    }
 }
 
@@ -262,12 +260,12 @@ nav {
          width:33.3333%;
          float:left;
          }
-         
+
       }
     }
     .slide-show {
         height:30em;
-        background-color:#fff; 
+        background-color:#fff;
         padding:0;
         margin-bottom:2em
     }
@@ -283,10 +281,10 @@ nav {
        .wobble{
          &:hover{
             a{
-               color:#fff; 
+               color:#fff;
             font-size : 1.2em;
             }
-            
+
          }
        }
        .tags-nav{
@@ -297,7 +295,7 @@ nav {
                   width:33.33%;
                   text-align:center;
                   list-style:none;
-                  float:left; 
+                  float:left;
                   padding:.5em;
                   a{
                      text-decoration:none;
@@ -313,7 +311,7 @@ nav {
          }
     }
 }
-.posts-body{ 
+.posts-body{
 
     margin-bottom:1em;
     background-color:transparent;
@@ -331,7 +329,7 @@ nav {
    .panel-subheader{
       padding:.5em 1em;
       font-weight:bolder;
-      font-size:1.2em; 
+      font-size:1.2em;
       b{
          color:#ccc;
       }
@@ -357,7 +355,7 @@ nav {
          border:3px solid #ccc;
          border-left:0px solid #ccc;
          border-right:0px solid #ccc;
- 
+
          border-radius: 0px;
          .description{
              padding:1em;
@@ -380,7 +378,7 @@ nav {
 }
 
 .article {
-    margin-top:60px; 
+    margin-top:60px;
     min-height:200em;
     background:#fff;
     padding-left:0;
@@ -388,14 +386,14 @@ nav {
     box-shadow: 0 0 .4em #ccc;
     @media (max-width: @screen-sm-max) {
         min-height:40em;
-        margin-top:2em; 
+        margin-top:2em;
     }
 
   .header{
-     padding:0; 
+     padding:0;
      border-bottom:5px solid #ccc;
      position:relative;
-     height:25em;   
+     height:25em;
   }
   .share-box{
      .des {
@@ -423,11 +421,11 @@ nav {
         max-height:100%;
      }
   }
-  
- 
+
+
 
   @media (max-width: @screen-sm-max) {
-       
+
   }
 
 }
@@ -466,7 +464,7 @@ nav {
 
 .tag-buttons{
 
-   .btn{ 
+   .btn{
      .btn-xs;
      .button-variant(@btn-default-color; #E7E7E7 ; #DBDBDB);
       margin-right: .5em;
@@ -477,13 +475,13 @@ nav {
        a.delete{
           color : @brand-danger;
        }
-      } 
+      }
    }
 
    .views {
       .btn-primary;
    }
-  
+
 }
 
 .new-post{
@@ -534,7 +532,7 @@ nav {
           img{
             max-height:30em;
           }
-         
+
        }
    }
    .post-body{
@@ -551,7 +549,7 @@ nav {
   margin-top:2em;
 
   .wiz-pager{
-      border: 1px solid @gray-lighter; 
+      border: 1px solid @gray-lighter;
       border-radius:  30px;
       padding:1em 3em;
       i{
@@ -570,7 +568,7 @@ nav {
                color: @brand-success;
             }
          }
-         
+
       }
   }
 }
@@ -586,7 +584,7 @@ nav {
     border-radius: 0px;
     height:3.7em;
     position:fixed;
-    top:55px; 
+    top:55px;
     z-index:100002;
     @media (max-width: @screen-sm-max) {
         position:relative !important;
@@ -600,7 +598,7 @@ nav {
 
 .md-styles {
     padding: .5em;
-   p{ 
+   p{
       font-size:1.1em !important;
       font-weight:light !important;
    }
@@ -659,18 +657,18 @@ nav {
 }
 
 .footer {
-   width:100%; 
-   padding: 5px; 
+   width:100%;
+   padding: 5px;
    background-color:#343742;
    >div{
-      //background-color:#fff; 
+      //background-color:#fff;
       width:100%;
       padding:0;
       .inner{
           padding:.7em;
-          width:100%; 
+          width:100%;
           text-align:center;
-          span { 
+          span {
              display:block;
              &:first-child{
                  margin-top:1em;
@@ -680,8 +678,8 @@ nav {
                  padding-bottom:.2em;
              }
              &:last-child{
-                color:#000; 
-                font-weight:light; 
+                color:#000;
+                font-weight:light;
                 font-size:1em;
 
                 a{
@@ -712,7 +710,7 @@ nav {
     .btn {
         @media (max-width: @screen-sm-max) {
            .btn-xs !important;
-           
+
         }
     }
 }
