@@ -175,7 +175,7 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
       ];
 
       //
-      $scope.active = $scope.views[1];
+      $scope.active = $scope.views[0];
 
       //
       $scope.setView = function(view){
@@ -235,25 +235,34 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
       }
 
       //
+      $scope.concurrency = 1;
+      $scope.updateConcurrency = function(val){
+           if(val > 0){
+              if($scope.concurrency < 10){
+                  $scope.concurrency++;
+              }
+           }
+           else{
+              if($scope.concurrency > 1){
+                  $scope.concurrency--;
+              }
+           }
+      }
+      //
       $scope.sendBulkMails = function(){
            $scope.sendingCerts = true;
-           (function worker(index){
-               if($scope.decodedArr.valid.length <=index){
-                   $scope.sendingCerts = false;
-               }
-               else{
-                 //Send out certificates to contacts in mailing list
-                 manualMailer.sendCert($scope.decodedArr.valid[index]).then(
-                     function(certImg){
-                        $scope.decodedArr.valid[index].status = 'sent';
-                        worker(++index);
-                     },
-                     function(err){
-                        $scope.decodedArr.valid[index].status = 'failed';
-                        worker(++index);
-                     }
-                 );
-               }
-           })(0);
+           function worker(index , cb){
+               //Send out certificates to contacts in mailing list
+               manualMailer.sendCert($scope.decodedArr.valid[index]).then(
+                   function(certImg){
+                      $scope.decodedArr.valid[index].status = 'sent';
+                   },
+                   function(err){
+                      $scope.decodedArr.valid[index].status = 'failed';
+                   }
+               );
+           };
+
+          //Setup concurrency rate control similar to ghost
       }
 });

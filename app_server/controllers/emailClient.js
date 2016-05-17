@@ -7,8 +7,8 @@ var path = require('path');
 var transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user: 'codemuhammed@gmail.com',
-        pass: 'naturecreate'
+        user: 'certificate@digifyafrica.com',
+        pass: 'pFz5_Rb1'
     }
 });
 
