@@ -33,26 +33,6 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
      //@TODO implement a better validation rule.s
      return function(data){
          if(angular.isArray(data)){
-
-             //Capitalize a word
-             function Capitalize(rawWord){
-                 var result = '';
-                 //@TODDO
-                 if(rawWord.length == 0){
-                      return result;
-                 }
-                 if(rawWord.length == 1){
-                     return angular.uppercase(rawWord);
-                 }
-                 else{
-                    result = angular.uppercase(rawWord[0]);
-                    for(var i=1; i<rawWord.length; i++){
-                        result+=angular.lowercase(rawWord[i]);
-                    }
-                 }
-                 return result;
-             }
-
              //data validator
              var roles = ['learnerNG' , 'learnerSA' , 'trainerNG' ,'trainerSA'];
              function isValidPerson(personStr){
@@ -66,8 +46,8 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
                var validRole = roles.indexOf(personDataArr[3])>=0;
 
                if(validFirstName && validlastName && validemail && validRole){
-                    personObj.firstname = Capitalize(personDataArr[0]);
-                    personObj.lastname = Capitalize(personDataArr[1]);
+                    personObj.firstname = angular.uppercase(personDataArr[0]);
+                    personObj.lastname = angular.uppercase(personDataArr[1]);
                     personObj.email = personDataArr[2];
                     personObj.role = personDataArr[3];
                     //
@@ -195,6 +175,8 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
     ////
     $scope.sendCert = function(person){
         $scope.sendingCert = true;
+        person.firstname = angular.uppercase(person.firstname);
+        person.firstname = angular.uppercase(person.lastname);
         manualMailer.sendCert(person).then(
             function(certImg){
                $timeout(function(){
