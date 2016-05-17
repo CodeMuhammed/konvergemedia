@@ -176,7 +176,7 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
     $scope.sendCert = function(person){
         $scope.sendingCert = true;
         person.firstname = angular.uppercase(person.firstname);
-        person.firstname = angular.uppercase(person.lastname);
+        person.lastname = angular.uppercase(person.lastname);
         manualMailer.sendCert(person).then(
             function(certImg){
                $timeout(function(){
