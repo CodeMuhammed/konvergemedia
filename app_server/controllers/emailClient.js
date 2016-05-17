@@ -7,8 +7,10 @@ var path = require('path');
 var transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user: 'certificate@digifyafrica.com',
-        pass: 'pFz5_Rb1'
+      //  user: 'certificate@digifyafrica.com',
+        //pass: 'pFz5_Rb1'
+        user: 'codemuhammed@gmail.com',
+        pass: 'naturecreate'
     }
 });
 
