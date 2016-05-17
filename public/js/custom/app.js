@@ -251,18 +251,23 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
       //
       $scope.sendBulkMails = function(){
            $scope.sendingCerts = true;
-           function worker(index , cb){
-               //Send out certificates to contacts in mailing list
-               manualMailer.sendCert($scope.decodedArr.valid[index]).then(
-                   function(certImg){
-                      $scope.decodedArr.valid[index].status = 'sent';
-                   },
-                   function(err){
-                      $scope.decodedArr.valid[index].status = 'failed';
-                   }
-               );
-           };
-
-          //Setup concurrency rate control similar to ghost
+           (function worker(index){
+               if($scope.decodedArr.valid.length <=index){
+                   $scope.sendingCerts = false;
+               }
+               else{
+                 //Send out certificates to contacts in mailing list
+                 manualMailer.sendCert($scope.decodedArr.valid[index]).then(
+                     function(certImg){
+                        $scope.decodedArr.valid[index].status = 'sent';
+                        worker(++index);
+                     },
+                     function(err){
+                        $scope.decodedArr.valid[index].status = 'failed';
+                        worker(++index);
+                     }
+                 );
+               }
+           })(0);
       }
 });
