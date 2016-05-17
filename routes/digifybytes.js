@@ -71,8 +71,8 @@ module.exports = function(emailClient , certClient){
 			 var color = '';
 			 var role = req.query.role;
 			 var roleCertObj = {
-				   'trainerNG':{certUrl:baseUrl+'img/DTCA.jpg' , color:'#B17092' , position:'415'},
-				   'trainerSA':{certUrl:baseUrl+'img/DTCSA.jpg', color:'#B17092' , position:'415'},
+				   'trainerNG':{certUrl:baseUrl+'img/DTCA.jpg' , color:'#000' , position:'415'},
+				   'trainerSA':{certUrl:baseUrl+'img/DTCSA.jpg', color:'#000' , position:'415'},
 					 'learnerNG':{certUrl:baseUrl+'img/DSCA.jpg' , color:'#000' , position:'400'},
 					 'learnerSA':{certUrl:baseUrl+'img/DSCSA.jpg', color:'#000' , position:'450'}
 			 };
