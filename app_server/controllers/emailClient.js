@@ -1,33 +1,28 @@
-//
-/*var nodemailer =  require('nodemailer');
+
+var ObjectId = require('mongodb').ObjectId;
+var nodemailer =  require('nodemailer');
+var path = require('path');
 
 // create reusable transporter object using SMTP transport
 var transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        XOAuth2 :{
-           user: "your_email_address@gmail.com",
-           clientId: "your_client_id",
-           clientSecret: "your_client_secret",
-           refreshToken: "your_refresh_token"
-        }
+        user: 'codemuhammed@gmail.com',
+        pass: 'naturecreate'
     }
 });
 
-//
 module.exports = function(){
 
-  function sendEmail(htmldata , email , subject  , attachment, cb){
+  function sendEmail(htmldata , email , subject , attachment , cb){
       // setup e-mail data with unicode symbols
       var mailOptions = {
-          from: 'digifyBytes Africa <certificate@digifyafrica.com>', // sender address
+          from: 'Digify Africa <certificate@digifyafrica.com>', // sender address
           to: email, // list of receivers
-          //cc:'second@domain.com',
-   		   //bcc:'secretagent@company.gov',
-   		   subject: subject,
-   		   'h:Reply-To': 'certificate@digifyafrica.com',
-   		   html: htmlData,
-         attachments:[attachment]
+          subject: subject, // Subject line
+          html: htmldata, // html body
+          'h:Reply-To': 'certificate@digifyafrica.com',
+          attachments: [{path:attachment}]
       };
 
       // send mail with defined transport object
@@ -44,10 +39,9 @@ module.exports = function(){
 
 	return {
 		sendEmail : sendEmail
-	}
-}*/
-
-var nodemailer =  require('nodemailer');
+	};
+}
+/*var nodemailer =  require('nodemailer');
 var mg = require('nodemailer-mailgun-transport');
 
 // This is your API key that you retrieve from www.mailgun.com/cp (free up to 10K monthly emails)
@@ -85,9 +79,9 @@ module.exports = function(){
 				return cb(null , info);
 			}
 		});
-    }
+  }
 
 	return {
 		sendEmail : sendEmail
 	};
-}
+}*/
