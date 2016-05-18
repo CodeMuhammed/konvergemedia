@@ -1,3 +1,31 @@
+<div style="z-index:100000000000; background-color:rgba(0 , 0 , 0 ,.5); height:100em; width:100%;position:fixed" ng-hide="isAuth()">
+      <div style="height:300px; width:500px; margin:auto auto;
+          box-shadow:0 2px 5px #ccc; background-color:#fff;
+          margin-top:10px;text-align:center; padding:1.5em">
+          <img src="img/logo-pc.png" alt="" />
+         <h3>Admin Login</h3>
+         <form name="authentication" class="col-xs-12 col-sm-8 col-sm-offset-2"
+              style="margin-top:1em"
+              novalidate ng-submit="login(password)">
+             <div class="form-group col-xs-12" style="padding:0">
+                 <input name="password" type="password" class="form-control"
+                 required ng-model="password" placeholder="Enter password" ng-click="resetError()">
+             </div>
+             <div class="clearfix"></div>
+             <div class="alert alert-warning" style="padding:1; margin-top:1em" ng-show="loginError">
+                   {{loginError}}
+             </div>
+             <div class="form-group col-xs-12 " style="padding:0">
+                <button type="submit" class="btn btn-primary btn-block"
+                   ng-disabled="authentication.$invalid || authenticating">
+                    <span ng-show="!authenticating">Login</span>
+                    <span ng-show="authenticating"><i class="icon fa fa-spinner fa-spin"></i> loading ....</span>
+                </button>
+             </div>
+          </form>
+      </div>
+</div>
+
 <div class="col-sm-8 col-sm-offset-2" style="text-align: left; border:1px solid #ccc;border-top:5px solid #ccc;
     height:20em; background:#2098D1 url('img/pro.jpg') center center no-repeat; 4
     background-size: cover;padding:0">

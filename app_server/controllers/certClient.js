@@ -26,7 +26,7 @@ module.exports = function(){
 
 				});
 			});
-			spooky.thenOpen(baseUrl+'digifyBytes/viewCert?'+'firstname='+person.firstname+'&'+'lastname='+person.lastname+'&'+'role='+person.role);
+			spooky.thenOpen(baseUrl+'digifyBytes/viewCert?'+'firstname='+person.firstname+'&'+'lastname='+person.lastname+'&'+'role='+person.role+'&'+'auth='+true);
 
 			spooky.then([{DNF:dirNamedFile , DIF:dirImgFile} , function(){
 				this.waitForSelector('div.cert' , function(){

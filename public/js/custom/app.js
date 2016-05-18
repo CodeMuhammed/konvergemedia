@@ -124,14 +124,51 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
     };
 }])
 
+// Factory for storing authentication
+.factory('Auth' , function($http , $q , $timeout){
+     //
+     var loggedIn = false;
+
+     //
+     function login(password){
+          var promise = $q.defer();
+          //
+          $http({
+              method:'POST',
+              url:'/digifyBytes/auth',
+              data:password
+          })
+          .success(function(status){
+               loggedIn = true;
+               promise.resolve(status);
+          })
+          .error(function(err){
+               promise.reject(err);
+          });
+
+          return promise.promise;
+     }
+
+     //
+     function isAuth(){
+         return loggedIn;
+     }
+
+     return {
+         login:login,
+         isAuth:isAuth
+     }
+})
+
 // Factory for manual mails
-.factory('manualMailer' , function($http , $q){
+.factory('manualMailer' , function($http , $q , Auth){
       //
       function sendCert(person){
           var promise = $q.defer();
+
           $http({
               method:'POST',
-              url:'/digifyBytes/sendCert',
+              url:'/digifyBytes/sendCert?auth='+Auth.isAuth(),
               data:person
           })
           .success(function(data){
@@ -140,18 +177,20 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
           .error(function(err){
                promise.reject(err);
           });
+
           return promise.promise;
       }
       return {
            sendCert:sendCert
       };
 })
+
 //============================ 2 implementation ============================
-.controller('homeController' , function($rootScope , $scope , $timeout){
+.controller('homeController' , function($scope , Auth ,  $timeout){
       //
       $scope.views = [
           'bulk mail',
-          'manual mail'
+          'manual mail',
       ];
 
       //
@@ -161,10 +200,35 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
       $scope.setView = function(view){
            $scope.active = view;
       }
+
+     //Controls login and views
+     $scope.isAuth = function(){
+         return Auth.isAuth();
+     }
+
+     //
+     $scope.login = function(password){
+          $scope.authenticating = true;
+          Auth.login({password:password}).then(
+             function(status){
+                 $scope.authenticating = false;
+                 console.log(status);
+              },
+              function(err){
+                $scope.authenticating = false;
+                $scope.loginError = err;
+              }
+          );
+     }
+
+     //
+     $scope.resetError = function(){
+         $scope.loginError = undefined;
+     }
 })
 
 //manual Mailer controller
-.controller('manualMailerController' , function($scope , $timeout ,manualMailer){
+.controller('manualMailerController' , function($scope , $timeout ,manualMailer , Auth){
   //
     $scope.person = {};
     $scope.person.role = 'trainerNG';
@@ -198,7 +262,7 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
 })
 
 //Bulk mailer controller
-.controller('bulkMailerController' , function($scope , $window , $timeout , $filter , manualMailer){
+.controller('bulkMailerController' , function($scope , $window , $timeout , $filter , manualMailer , Auth){
       $scope.file = {};
       $scope.myLoaded = function(){
            $timeout(function(){

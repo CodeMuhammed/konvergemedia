@@ -1,6 +1,5 @@
 var express = require('express');
 var router = express.Router();
-var fs = require('fs');
 var path = require('path');
 
 /*This api is responsible for sending certificates to digifyBytes graduates*/
@@ -39,67 +38,75 @@ module.exports = function(emailClient , certClient){
 		 });
 	}
 
-	router.route('/sendCert')
+	//
+	router.route('/auth')
+		.post(function(req , res){
+         if(req.body.password === '12345'){
+					    res.status(200).send('Successfully authenticated admin');
+				 }
+				 else{
+					   res.status(500).send('Failed authenticate admin');
+				 }
+		 });
+
+  //
+	router.route('/sendCert') //add authentication rules
 	   .post(function(req , res){
-		    //use defaults
 		    var person = req.body;
-		    getCert(person,  function(err , cert , certImg){
-				if(err){
-					res.status(500).send(err);
+				if(req.query){
+						getCert(person,  function(err , cert , certImg){
+								if(err){
+									res.status(500).send(err);
+								}
+								else{
+									sendEmail(person, certImg , function(err , status){
+										 if(err){
+											res.status(500).send(err);
+										 }
+										 else{
+											 console.log(status);
+											 res.status(200).send(certImg);
+										 }
+									});
+								}
+						});
 				}
 				else{
-					sendEmail(person, certImg , function(err , status){
-					   if(err){
-						  res.status(500).send(err);
-					   }
-					   else{
-							 console.log(status);
-						   res.status(200).send(certImg);
-					   }
-					});
+					 res.status(400).send('Cannot send certificate');
 				}
-			});
+
 	   });
 
 	//
-	router.route('/viewCert')
+	router.route('/viewCert') //add authentication rules
 	  .get(function(req , res){
-		   //init query object to default or with values from query string parameters
-			 var baseUrl = process.env.NODE_ENV == 'production'? 'http://digifyBytes.herokuapp.com/' : 'http://localhost:4000/';
-			 var certUrl = '';
-			 var position= '';
-			 var color = '';
-			 var role = req.query.role;
-			 var roleCertObj = {
-				   'trainerNG':{certUrl:baseUrl+'img/DTCA.jpg' , color:'#000' , position:'415'},
-				   'trainerSA':{certUrl:baseUrl+'img/DTCSA.jpg', color:'#000' , position:'415'},
-					 'learnerNG':{certUrl:baseUrl+'img/DSCA.jpg' , color:'#000' , position:'400'},
-					 'learnerSA':{certUrl:baseUrl+'img/DSCSA.jpg', color:'#000' , position:'450'}
-			 };
+			   if(req.query.auth){
+							 //init query object to default or with values from query string parameters
+							var baseUrl = process.env.NODE_ENV == 'production'? 'http://digifyBytes.herokuapp.com/' : 'http://localhost:4000/';
 
-			 if(role){
-           certUrl = roleCertObj[role].certUrl;
-					 color = roleCertObj[role].color;
-					 position = roleCertObj[role].position;
-			 }
-			 else{
-           certUrl = roleCertObj['learnerSA'].certUrl;
-					 color = roleCertObj['learnerSA'].color;
-					 position = roleCertObj['learnerSA'].position;
-			 }
+							var roleCertObj = {
+									'trainerNG':{certUrl:baseUrl+'img/DTCA.jpg' , position:'415'},
+									'trainerSA':{certUrl:baseUrl+'img/DTCSA.jpg', position:'415'},
+									'learnerNG':{certUrl:baseUrl+'img/DSCA.jpg' , position:'400'},
+									'learnerSA':{certUrl:baseUrl+'img/DSCSA.jpg', position:'450'}
+							};
 
-			 //Information to be bound to views
-		   var data = {
-			   firstname : req.query.firstname || 'JULIANS',
-			   lastname : req.query.lastname || 'MAYS',
-				 certUrl: certUrl ,
-				 color:color,
-				 position:position
-		   };
+							var role = req.query.role || 'learnerSA';
 
-			 console.log(data);
+							//Information to be bound to views
+							var data = {
+								firstname : req.query.firstname || 'JULIAN',
+								lastname : req.query.lastname || 'MAYS',
+								certUrl : roleCertObj[role].certUrl,
+								position : roleCertObj[role].position
+							};
 
-		   res.render('digifycert.ejs' , data);
+							res.render('digifycert.ejs' , data);
+				 }
+				 else{
+					   res.status(400).send('Cannot view certificate not admin');
+				 }
+
 	   });
 
 
