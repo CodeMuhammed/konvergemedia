@@ -41,7 +41,7 @@ module.exports = function(emailClient , certClient){
 	//
 	router.route('/auth')
 		.post(function(req , res){
-         if(req.body.password === '12345'){
+         if(req.body.password === 'admin@digify'){
 					    res.status(200).send('Successfully authenticated admin');
 				 }
 				 else{
