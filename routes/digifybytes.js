@@ -59,7 +59,7 @@ module.exports = function(emailClient , certClient){
 									res.status(500).send(err);
 								}
 								else{
-									sendEmail(person, certImg , function(err , status){
+									sendEmail(person, cert , function(err , status){
 										 if(err){
 											res.status(500).send(err);
 										 }
