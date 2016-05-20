@@ -1,5 +1,5 @@
 
-var ObjectId = require('mongodb').ObjectId;
+/*var ObjectId = require('mongodb').ObjectId;
 var nodemailer =  require('nodemailer');
 var path = require('path');
 
@@ -42,8 +42,8 @@ module.exports = function(){
 	return {
 		sendEmail : sendEmail
 	};
-}
-/*var nodemailer =  require('nodemailer');
+}*/
+var nodemailer =  require('nodemailer');
 var mg = require('nodemailer-mailgun-transport');
 
 // This is your API key that you retrieve from www.mailgun.com/cp (free up to 10K monthly emails)
@@ -61,7 +61,7 @@ module.exports = function(){
 
     function sendEmail(htmlData , email , subject , attachment ,  cb){
 		var options = {
-		   from: 'digifyBytes Africa <certificate@digifyafrica.com>',
+		   from: 'digify Africa <certificate@digifyafrica.com>',
 		   to: email, // An array if you have multiple recipients.
 		   //cc:'second@domain.com',
 		   //bcc:'secretagent@company.gov',
@@ -86,4 +86,4 @@ module.exports = function(){
 	return {
 		sendEmail : sendEmail
 	};
-}*/
+}
