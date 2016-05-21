@@ -1,5 +1,5 @@
 <div style="z-index:100000000000; background-color:rgba(0 , 0 , 0 ,.5); height:100em; width:100%;position:fixed" ng-hide="isAuth()">
-      <div style="height:300px; width:500px; margin:auto auto;
+      <div style="height:300px; max-width:500px; margin:auto auto;
           box-shadow:0 2px 5px #ccc; background-color:#fff;
           margin-top:10px;text-align:center; padding:1.5em">
           <img src="img/logo-pc.png" alt="" />
@@ -63,11 +63,8 @@
                           <span>
                                User Data: {{decodedArr.valid.length+decodedArr.invalid.length}}, Formatting Errors: {{decodedArr.invalid.length}}
                           </span>
-                          <button class="btn btn-sm btn-primary pull-right" style="border-radius:0" ng-click="sendBulkMails()" ng-disabled="sendingCerts">
-                              <span ng-show="!sendingCerts">Send certificates</span>
-                              <span ng-show="sendingCerts"><i class="icon fa fa-spinner fa-spin"></i> Sending certificates ....</span>
-                          </button>
-                          <span class="pull-right" style="border-radius:0; margin-right:1em" >
+                           <hr>
+                          <span class="" style="border-radius:0; margin-right:1em" >
                               <button class="btn btn-sm btn-default" ng-disabled="sendingCerts" ng-click="updateConcurrency(-1)">
                                  <i class="icon fa fa-chevron-left" ></i>
                               </button>
@@ -76,7 +73,10 @@
                                  <i class="icon fa fa-chevron-right" ></i>
                               </button>
                           </span>
-
+                          <button class="btn btn-sm btn-primary pull-right" style="border-radius:0" ng-click="sendBulkMails()" ng-disabled="sendingCerts">
+                              <span ng-show="!sendingCerts">Send certificates</span>
+                              <span ng-show="sendingCerts"><i class="icon fa fa-spinner fa-spin"></i> Sending certificates ....</span>
+                          </button>
 
                       </h4>
                   </div>

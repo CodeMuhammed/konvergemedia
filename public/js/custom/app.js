@@ -236,7 +236,7 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
     $scope.certImg = 'img/test.png';
     $scope.error = {msg:'No error at this time' , status:false};
 
-    ////
+    //
     $scope.sendCert = function(person){
         $scope.sendingCert = true;
         person.firstname = angular.uppercase(person.firstname);
@@ -262,7 +262,7 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
 })
 
 //Bulk mailer controller
-.controller('bulkMailerController' , function($scope , $window , $timeout , $filter , manualMailer , Auth){
+.controller('bulkMailerController' , function($scope , $window , $timeout , $interval ,  $filter , manualMailer , Auth){
       $scope.file = {};
       $scope.myLoaded = function(){
            $timeout(function(){
@@ -294,26 +294,60 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
               }
            }
       }
+
       //
       $scope.sendBulkMails = function(){
            $scope.sendingCerts = true;
-           (function worker(index){
-               if($scope.decodedArr.valid.length <=index){
-                   $scope.sendingCerts = false;
-               }
-               else{
-                 //Send out certificates to contacts in mailing list
-                 manualMailer.sendCert($scope.decodedArr.valid[index]).then(
-                     function(certImg){
-                        $scope.decodedArr.valid[index].status = 'sent';
-                        worker(++index);
-                     },
-                     function(err){
-                        $scope.decodedArr.valid[index].status = 'failed';
-                        worker(++index);
+           $scope.sendingQueue = 0;
+           $scope.sent = 0;
+           $scope.sendingIndex = 0;
+
+           function worker(index , cb){
+               console.log('here u');
+               $scope.sendingQueue++;
+               
+               /*$timeout(function(){
+                  $scope.decodedArr.valid[index].status = 'sent';
+                  cb();
+               } , 3000);*/
+
+               //Send out certificates to contacts in mailing list
+               manualMailer.sendCert($scope.decodedArr.valid[index]).then(
+                   function(certImg){
+                      $scope.decodedArr.valid[index].status = 'sent';
+                      cb();
+                   },
+                   function(err){
+                      $scope.decodedArr.valid[index].status = 'failed';
+                      cb();
+                   }
+               );
+           };
+
+
+           //
+           var interval = $interval(function(){
+                if($scope.sent < $scope.decodedArr.valid.length){
+                     console.log('here t');
+                     if($scope.sendingQueue < $scope.concurrency){
+                         console.log('here j');
+                          for(var i=$scope.sendingQueue; i<$scope.concurrency; i++){
+                              if($scope.sendingIndex < $scope.decodedArr.valid.length){
+                                worker($scope.sendingIndex++ ,function(){
+                                  $scope.sendingQueue--;
+                                  $scope.sent++;
+                                });
+                              }
+
+                          }
                      }
-                 );
-               }
-           })(0);
+                }
+                else{
+                   console.log('All emails have been sent out');
+                   $interval.cancel(interval);
+                   $scope.sendingCerts = false;
+                }
+           } , 5000);
+
       }
 });
