@@ -338,7 +338,7 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
                                       $scope.sendingQueue--;
                                       $scope.sent++;
                                     });
-                                  } , 1000);
+                                  });
                               }
 
                           }
