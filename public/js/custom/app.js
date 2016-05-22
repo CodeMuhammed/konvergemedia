@@ -284,7 +284,7 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
       $scope.concurrency = 1;
       $scope.updateConcurrency = function(val){
            if(val > 0){
-              if($scope.concurrency < 10){
+              if($scope.concurrency < 1){
                   $scope.concurrency++;
               }
            }
