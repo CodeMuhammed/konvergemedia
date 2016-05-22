@@ -54,33 +54,34 @@ var auth = {
   }
 }
 
-//
-var nodemailerMailgun = nodemailer.createTransport(mg(auth));
 
 module.exports = function(){
 
     function sendEmail(htmlData , email , subject , attachment ,  cb){
-		var options = {
-		   from: 'digify Africa <certificate@digifyafrica.com>',
-		   to: email, // An array if you have multiple recipients.
-		   //cc:'second@domain.com',
-		   //bcc:'secretagent@company.gov',
-		   subject: subject,
-		   'h:Reply-To': 'certificate@digifyafrica.com',
-		   html: htmlData,
-		   attachment: attachment // could also be in an array format
-		};
 
-		nodemailerMailgun.sendMail(options, function (err, info) {
-			if (err) {
-				console.log(err);
-				return cb(err , null);
-			}
-			else {
-				console.log(info);
-				return cb(null , info);
-			}
-		});
+        //
+        var nodemailerMailgun = nodemailer.createTransport(mg(auth));
+    		var options = {
+    		   from: 'digify Africa <certificate@digifyafrica.com>',
+    		   to: email, // An array if you have multiple recipients.
+    		   //cc:'second@domain.com',
+    		   //bcc:'secretagent@company.gov',
+    		   subject: subject,
+    		   'h:Reply-To': 'certificate@digifyafrica.com',
+    		   html: htmlData,
+    		   attachment: attachment // could also be in an array format
+    		};
+
+    		nodemailerMailgun.sendMail(options, function (err, info) {
+    			if (err) {
+    				console.log(err);
+    				return cb(err , null);
+    			}
+    			else {
+    				console.log(info);
+    				return cb(null , info);
+    			}
+    		});
   }
 
 	return {

@@ -284,7 +284,7 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
       $scope.concurrency = 1;
       $scope.updateConcurrency = function(val){
            if(val > 0){
-              if($scope.concurrency < 1){
+              if($scope.concurrency < 10){
                   $scope.concurrency++;
               }
            }
@@ -333,10 +333,12 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
                          console.log('here j');
                           for(var i=$scope.sendingQueue; i<$scope.concurrency; i++){
                               if($scope.sendingIndex < $scope.decodedArr.valid.length){
-                                worker($scope.sendingIndex++ ,function(){
-                                  $scope.sendingQueue--;
-                                  $scope.sent++;
-                                });
+                                  $timeout(function(){
+                                    worker($scope.sendingIndex++ ,function(){
+                                      $scope.sendingQueue--;
+                                      $scope.sent++;
+                                    });
+                                  } , 1000);
                               }
 
                           }
@@ -347,7 +349,7 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
                    $interval.cancel(interval);
                    $scope.sendingCerts = false;
                 }
-           } , 5000);
+           } , 2000);
 
       }
 });
