@@ -62,7 +62,7 @@ module.exports = function(){
         //
         var nodemailerMailgun = nodemailer.createTransport(mg(auth));
     		var options = {
-    		   from: 'digify Africa <certificate@digifyafrica.com>',
+    		   from: 'Digify Africa <certificate@digifyafrica.com>',
     		   to: email, // An array if you have multiple recipients.
     		   //cc:'second@domain.com',
     		   //bcc:'secretagent@company.gov',

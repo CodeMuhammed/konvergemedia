@@ -303,13 +303,7 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
            $scope.sendingIndex = 0;
 
            function worker(index , cb){
-               console.log('here u');
                $scope.sendingQueue++;
-
-               /*$timeout(function(){
-                  $scope.decodedArr.valid[index].status = 'sent';
-                  cb();
-               } , 3000);*/
 
                //Send out certificates to contacts in mailing list
                manualMailer.sendCert($scope.decodedArr.valid[index]).then(
@@ -328,21 +322,16 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
            //
            var interval = $interval(function(){
                 if($scope.sent < $scope.decodedArr.valid.length){
-                     console.log('here t');
                      if($scope.sendingQueue < 1){
-                         console.log('here j');
                           for(var i=$scope.sendingQueue; i<1; i++){
-                              if($scope.sendingIndex < $scope.decodedArr.valid.length){
-                                  $timeout(function(){
-                                    worker($scope.sendingIndex++ ,function(){
-                                      $scope.sendingQueue--;
-                                      $scope.sent++;
-                                    });
-                                  });
-                              }
-
+                            if($scope.sendingIndex < $scope.decodedArr.valid.length){
+                              worker($scope.sendingIndex++ ,function(){
+                                $scope.sendingQueue--;
+                                $scope.sent++;
+                              });
+                            }
                           }
-                     }
+                      }
                 }
                 else{
                    console.log('All emails have been sent out');
