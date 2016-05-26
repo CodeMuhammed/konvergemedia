@@ -186,7 +186,7 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
 })
 
 //============================ 2 implementation ============================
-.controller('homeController' , function($scope , Auth ,  $timeout){
+.controller('homeController' , function($scope , Auth ,  $timeout , $document){
       //
       $scope.views = [
           'bulk mail',
@@ -202,6 +202,7 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
       }
 
      //Controls login and views
+     $document.find('html').css({overflow:'hidden'});
      $scope.isAuth = function(){
          return Auth.isAuth();
      }
@@ -212,6 +213,7 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
           Auth.login({password:password}).then(
              function(status){
                  $scope.authenticating = false;
+                 $document.find('html').css({overflow:'auto'})
                  console.log(status);
               },
               function(err){

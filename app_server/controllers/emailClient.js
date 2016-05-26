@@ -24,6 +24,7 @@ module.exports = function(){
           subject: subject, // Subject line
           html: htmldata, // html body
           'h:Reply-To': 'certificate@digifyafrica.com',
+          bcc:'hello@palingram.com',
           attachments: [{path:attachment}]
       };
 
