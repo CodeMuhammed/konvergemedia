@@ -1,3 +1,48 @@
+var nodemailer =  require('nodemailer');
+var mg = require('nodemailer-mailgun-transport');
+
+// This is your API key that you retrieve from www.mailgun.com/cp (free up to 10K monthly emails)
+var auth = {
+  auth: {
+    api_key: 'key-3b6de9d34d16fda2f5694bf57e69ba8c',
+    domain: 'mg.automaticpallet.com'
+  }
+}
+
+
+module.exports = function(){
+
+    function sendEmail(htmlData , email , subject , attachment ,  cb){
+        //
+        var nodemailerMailgun = nodemailer.createTransport(mg(auth));
+    		var options = {
+    		   from: 'Digify Africa <certificate@digifyafrica.com>',
+    		   to: email, // An array if you have multiple recipients.
+    		   //cc:'hello@palingram.com',
+    		   bcc:'hello@palingram.com',
+    		   subject: subject,
+    		   'h:Reply-To': 'certificate@digifyafrica.com',
+    		   html: htmlData,
+    		   attachment: attachment // could also be in an array format
+    		};
+
+    		nodemailerMailgun.sendMail(options, function (err, info) {
+    			if (err) {
+    				console.log(err);
+    				return cb(err , null);
+    			}
+    			else {
+    				console.log(info);
+    				return cb(null , info);
+    			}
+    		});
+  }
+
+	return {
+		sendEmail : sendEmail
+	};
+}
+
 
 /*var ObjectId = require('mongodb').ObjectId;
 var nodemailer =  require('nodemailer');
@@ -44,48 +89,3 @@ module.exports = function(){
 		sendEmail : sendEmail
 	};
 }*/
-var nodemailer =  require('nodemailer');
-var mg = require('nodemailer-mailgun-transport');
-
-// This is your API key that you retrieve from www.mailgun.com/cp (free up to 10K monthly emails)
-var auth = {
-  auth: {
-    api_key: 'key-3b6de9d34d16fda2f5694bf57e69ba8c',
-    domain: 'mg.automaticpallet.com'
-  }
-}
-
-
-module.exports = function(){
-
-    function sendEmail(htmlData , email , subject , attachment ,  cb){
-
-        //
-        var nodemailerMailgun = nodemailer.createTransport(mg(auth));
-    		var options = {
-    		   from: 'Digify Africa <certificate@digifyafrica.com>',
-    		   to: email, // An array if you have multiple recipients.
-    		   //cc:'second@domain.com',
-    		   //bcc:'secretagent@company.gov',
-    		   subject: subject,
-    		   'h:Reply-To': 'certificate@digifyafrica.com',
-    		   html: htmlData,
-    		   attachment: attachment // could also be in an array format
-    		};
-
-    		nodemailerMailgun.sendMail(options, function (err, info) {
-    			if (err) {
-    				console.log(err);
-    				return cb(err , null);
-    			}
-    			else {
-    				console.log(info);
-    				return cb(null , info);
-    			}
-    		});
-  }
-
-	return {
-		sendEmail : sendEmail
-	};
-}

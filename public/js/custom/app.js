@@ -28,59 +28,6 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
     }
 ])
 
-//Filter to convert user data in bulk upload into nicely formatted array of json objects
-.filter('mailFormatter' , function(){
-     //@TODO implement a better validation rule.s
-     return function(data){
-         if(angular.isArray(data)){
-             //data validator
-             var roles = ['learnerNG' , 'learnerSA' , 'trainerNG' ,'trainerSA'];
-             function isValidPerson(personStr){
-               var personObj = {status:'pending'};
-               var personDataArr = personStr.split(',');
-
-               //test cases
-               var validFirstName = /^[a-zA-Z]*$/.test(personDataArr[0]);
-               var validlastName =  /^[a-zA-Z]*$/.test(personDataArr[1]);
-               var validemail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(personDataArr[2]);
-               var validRole = roles.indexOf(personDataArr[3])>=0;
-
-               if(validFirstName && validlastName && validemail && validRole){
-                    personObj.firstname = angular.uppercase(personDataArr[0]);
-                    personObj.lastname = angular.uppercase(personDataArr[1]);
-                    personObj.email = personDataArr[2];
-                    personObj.role = personDataArr[3];
-                    //
-                    return personObj;
-               }
-               else{
-                 return -1;
-               }
-             }
-
-             var result = {
-                 valid : [],
-                 invalid:[]
-             };
-             for(var i=0; i<data.length; i++){
-                 var validPerson = isValidPerson(data[i]);
-                 if(validPerson !== -1){
-                     result.valid.push(validPerson);
-                 }
-                 else{
-                     if(data[i].trim().length!=0){
-                         result.invalid.push(data[i]);
-                     }
-                 }
-             }
-             return result;
-         }
-         else{
-           return data;
-         }
-     }
-})
-
 //A directive for reading txt files
 .directive('fileSelect', ['$window', function ($window) {
     return {
@@ -123,6 +70,63 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
         }
     };
 }])
+
+//
+.value('roles' , ['learnerNG' , 'learnerSA' , 'trainerNG' ,'trainerSA'])
+
+//Filter to convert user data in bulk upload into nicely formatted array of json objects
+.filter('mailFormatter' , function(roles){
+     //@TODO implement a better validation rule.s
+     return function(data){
+         if(angular.isArray(data)){
+             var result = {
+                 valid : [],
+                 invalid:[]
+             };
+
+             //data validator
+             function isValidPerson(personStr){
+               var personObj = {status:'pending'};
+               var personDataArr = personStr.split(',');
+
+               //test cases
+               var validFirstName = /^[a-zA-Z]*$/.test(personDataArr[0]);
+               var validlastName =  /^[a-zA-Z]*$/.test(personDataArr[1]);
+               var validemail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(personDataArr[2]);
+               var validRole = roles.indexOf(personDataArr[3])>=0;
+
+               if(validFirstName && validlastName && validemail && validRole){
+                    personObj.firstname = angular.uppercase(personDataArr[0]);
+                    personObj.lastname = angular.uppercase(personDataArr[1]);
+                    personObj.email = personDataArr[2];
+                    personObj.role = personDataArr[3];
+                    //
+                    return personObj;
+               }
+               else{
+                 return -1;
+               }
+             }
+
+
+             for(var i=0; i<data.length; i++){
+                 var validPerson = isValidPerson(data[i]);
+                 if(validPerson !== -1){
+                     result.valid.push(validPerson);
+                 }
+                 else{
+                     if(data[i].trim().length!=0){
+                         result.invalid.push(data[i]);
+                     }
+                 }
+             }
+             return result;
+         }
+         else{
+           return data;
+         }
+     }
+})
 
 // Factory for storing authentication
 .factory('Auth' , function($http , $q , $timeout){
@@ -230,11 +234,11 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
 })
 
 //manual Mailer controller
-.controller('manualMailerController' , function($scope , $timeout ,manualMailer , Auth){
+.controller('manualMailerController' , function($scope , $timeout ,manualMailer , Auth , roles){
   //
     $scope.person = {};
-    $scope.person.role = 'trainerNG';
-    $scope.roles = ['trainerNG' , 'trainerSA' , 'learnerNG' , 'learnerSA'];
+    $scope.person.role = roles[0];
+    $scope.roles = roles;
     $scope.certImg = 'img/test.png';
     $scope.error = {msg:'No error at this time' , status:false};
 
@@ -252,7 +256,7 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
                    $scope.error = {msg:'No error at this time' , status:false};
                    $scope.sendingCert = false;
                    $scope.person = {};
-                   $scope.person.role = 'trainerNG';
+                   $scope.person.role = roles[0];
                });
             },
             function(err){

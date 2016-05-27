@@ -85,10 +85,10 @@ module.exports = function(emailClient , certClient){
 							var baseUrl = process.env.NODE_ENV == 'production'? 'http://digifyBytes.herokuapp.com/' : 'http://localhost:4000/';
 
 							var roleCertObj = {
-									'trainerNG':{certUrl:baseUrl+'img/DTCA.jpg' , position:'415'},
-									'trainerSA':{certUrl:baseUrl+'img/DTCSA.jpg', position:'415'},
-									'learnerNG':{certUrl:baseUrl+'img/DSCA.jpg' , position:'400'},
-									'learnerSA':{certUrl:baseUrl+'img/DSCSA.jpg', position:'450'}
+									'trainerNG':{certUrl:baseUrl+'img/trainerNG.jpg' , position:'415' , color: 'red'},
+									'trainerSA':{certUrl:baseUrl+'img/trainerSA.jpg' , position:'415' , color: 'red'},
+									'learnerNG':{certUrl:baseUrl+'img/learnerNG.jpg' , position:'400' , color: 'red'},
+									'learnerSA':{certUrl:baseUrl+'img/learnerSA.jpg' , position:'450' , color: 'red'}
 							};
 
 							var role = req.query.role || 'learnerSA';
@@ -98,7 +98,8 @@ module.exports = function(emailClient , certClient){
 								firstname : req.query.firstname || 'JULIAN',
 								lastname : req.query.lastname || 'MAYS',
 								certUrl : roleCertObj[role].certUrl,
-								position : roleCertObj[role].position
+								position : roleCertObj[role].position,
+								color : roleCertObj[role].color
 							};
 
 							res.render('digifycert.ejs' , data);
