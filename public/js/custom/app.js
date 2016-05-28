@@ -103,7 +103,7 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
        return rolesArr
     }
 
-    //
+    ////
     return {
        rolesAsync:rolesAsync,
        rolesSync:rolesSync
