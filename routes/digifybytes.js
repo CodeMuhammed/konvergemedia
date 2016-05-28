@@ -6,7 +6,7 @@ var path = require('path');
 module.exports = function(emailClient , certClient){
 	console.log('Digify Bytes Loaded');
 
-	//
+	////
 	var roles = [
 	     'Trainer-AfricaWide',
 	     'Trainer-ZA',
