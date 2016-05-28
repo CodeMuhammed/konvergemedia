@@ -7,6 +7,21 @@ module.exports = function(emailClient , certClient){
 	console.log('Digify Bytes Loaded');
 
 	//
+	var roles = [
+	     'Trainer-AfricaWide',
+	     'Trainer-ZA',
+	     'DigitalStrategy101-ZA',
+	     'DigitalStrategy101-AfricaWide',
+	     'DigitalStrategy101-Online',
+	     'Digital101-ZA',
+	     'Digital101-AfricaWide',
+	     'Digital101-Online',
+	     'Strategy101-ZA',
+	     'Strategy101-AfricaWide',
+	     'Strategy101-Online'
+	];
+
+	//
 	function getCert(person, cb){
 		 console.log('getting certificate for', person.firstname , person.lastname);
 	   var dirNamedFile = path.join(__dirname , 'pdf' , person.firstname+person.lastname+person.role);
@@ -24,9 +39,9 @@ module.exports = function(emailClient , certClient){
 	//
 	function sendEmail(person , attachment , cb){
 		 console.log('sending certificate to', person.firstname , person.lastname);
-		 var htmlData = '<b>Congratulations '+person.firstname+' '+person.lastname+'</b>, <span>your Digify Bytes certificate is here!</span>';
+		 var htmlData = '<b>Congratulations '+person.firstname+' '+person.lastname+'</b>, <span>your Digify Africa certificate is here!</span>';
 		 var attachment = attachment;
-		 var subject = 'Digify Bytes Certificate';
+		 var subject = 'Digify Africa Certificate';
 		 var email = person.email;
 		 emailClient.sendEmail(htmlData , email , subject , attachment,  function(err , status){
 			  if(status){
@@ -81,27 +96,22 @@ module.exports = function(emailClient , certClient){
 	router.route('/viewCert') //add authentication rules
 	  .get(function(req , res){
 			   if(req.query.auth){
-							 //init query object to default or with values from query string parameters
+					    console.log(req.query.role);
+							//init query object to default or with values from query string parameters
 							var baseUrl = process.env.NODE_ENV == 'production'? 'http://digifyBytes.herokuapp.com/' : 'http://localhost:4000/';
 
-							var roleCertObj = {
-									'trainerNG':{certUrl:baseUrl+'img/trainerNG.jpg' , position:'415' , color: 'red'},
-									'trainerSA':{certUrl:baseUrl+'img/trainerSA.jpg' , position:'415' , color: 'red'},
-									'learnerNG':{certUrl:baseUrl+'img/learnerNG.jpg' , position:'400' , color: 'red'},
-									'learnerSA':{certUrl:baseUrl+'img/learnerSA.jpg' , position:'450' , color: 'red'}
-							};
-
-							var role = req.query.role || 'learnerSA';
-
 							//Information to be bound to views
+							var index = req.query.role && roles.indexOf(req.query.role)>=0 ? roles.indexOf(req.query.role) : 0;
 							var data = {
-								firstname : req.query.firstname || 'JULIAN',
-								lastname : req.query.lastname || 'MAYS',
-								certUrl : roleCertObj[role].certUrl,
-								position : roleCertObj[role].position,
-								color : roleCertObj[role].color
+								  firstname : req.query.firstname || 'JULIAN',
+									lastname : req.query.lastname || 'MAYS',
+									certUrl : baseUrl+'img/'+roles[index]+'.jpg',
+									position : index<=1? '415' : '340',
+								  color: '#BC5192',
+									fontSize:index<=1? '2.5em' : '3.5em',
 							};
 
+							//render results
 							res.render('digifycert.ejs' , data);
 				 }
 				 else{

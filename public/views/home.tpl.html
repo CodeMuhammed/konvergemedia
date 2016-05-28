@@ -74,7 +74,8 @@
                                  <i class="icon fa fa-chevron-right" ></i>
                               </button>
                           </span>
-                          <button class="btn btn-sm btn-primary pull-right" style="border-radius:0" ng-click="sendBulkMails()" ng-disabled="sendingCerts">
+                          <button class="btn btn-sm btn-primary pull-right" style="border-radius:0"
+                                 ng-click="sendBulkMails()" ng-disabled="sendingCerts || decodedArr.valid.length<=0">
                               <span ng-show="!sendingCerts">Send certificates</span>
                               <span ng-show="sendingCerts"><i class="icon fa fa-spinner fa-spin"></i> Sending certificates ....</span>
                           </button>
@@ -129,21 +130,21 @@
     											<input name="email" type="email" class="form-control"
     											required ng-model="person.email" placeholder="Enter email address">
     									 </div>
-                       <div class="form-group col-xs-12 " style="padding:0">
+                       <div class="form-group col-xs-12 " style="padding:0; overflow:auto;height:30em">
                           <label>participant's role:&nbsp;</label>
                           <button type="button" class="btn btn-default" ng-model="person.role"
                              data-html="0" data-toggle="true" reqiured
                              bs-options="role as role for role in roles" bs-select>
                              <span class="caret"></span>
                           </button>
-    									 </div>
 
-    									 <div class="form-group col-xs-12 " style="padding:0">
-    										  <button type="submit" class="btn btn-primary btn-block"
-      											 ng-disabled="manualMail.$invalid || sendingCert">
-      											  <span ng-show="!sendingCert">Send certificate</span>
-    													<span ng-show="sendingCert"><i class="icon fa fa-spinner fa-spin"></i> loading ....</span>
-      									  </button>
+      									 <div class="form-group col-xs-12 " style="padding:0; margin-top:2em">
+      										  <button type="submit" class="btn btn-primary btn-block"
+        											 ng-disabled="manualMail.$invalid || sendingCert">
+        											  <span ng-show="!sendingCert">Send certificate</span>
+      													<span ng-show="sendingCert"><i class="icon fa fa-spinner fa-spin"></i> loading ....</span>
+        									  </button>
+      									 </div>
     									 </div>
     								</form>
     			    </div>

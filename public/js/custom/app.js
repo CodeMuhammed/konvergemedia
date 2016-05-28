@@ -72,7 +72,19 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
 }])
 
 //
-.value('roles' , ['learnerNG' , 'learnerSA' , 'trainerNG' ,'trainerSA'])
+.value('roles' , [
+     'Trainer-AfricaWide',
+     'Trainer-ZA',
+     'DigitalStrategy101-ZA',
+     'DigitalStrategy101-AfricaWide',
+     'DigitalStrategy101-Online',
+     'Digital101-ZA',
+     'Digital101-AfricaWide',
+     'Digital101-Online',
+     'Strategy101-ZA',
+     'Strategy101-AfricaWide',
+     'Strategy101-Online'
+])
 
 //Filter to convert user data in bulk upload into nicely formatted array of json objects
 .filter('mailFormatter' , function(roles){
