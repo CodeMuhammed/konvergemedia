@@ -65,6 +65,12 @@ module.exports = function(emailClient , certClient){
 		 });
 
   //
+ 	router.route('/getRoles')
+ 		.get(function(req , res){
+        res.status(200).send(roles);
+ 		 });
+
+  //
 	router.route('/sendCert') //add authentication rules
 	   .post(function(req , res){
 		    var person = req.body;

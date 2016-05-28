@@ -72,67 +72,94 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
 }])
 
 //
-.value('roles' , [
-     'Trainer-AfricaWide',
-     'Trainer-ZA',
-     'DigitalStrategy101-ZA',
-     'DigitalStrategy101-AfricaWide',
-     'DigitalStrategy101-Online',
-     'Digital101-ZA',
-     'Digital101-AfricaWide',
-     'Digital101-Online',
-     'Strategy101-ZA',
-     'Strategy101-AfricaWide',
-     'Strategy101-Online'
-])
+.factory('Roles' ,function($http , $q){
+    var rolesArr = [];
+
+
+    function rolesAsync(){
+       var promise = $q.defer();
+
+       if(rolesArr.length == 0){
+           $http({
+               method:'GET',
+               url:'/digifyBytes/getRoles'
+           })
+           .success(function(data){
+                rolesArr = data;
+                promise.resolve(rolesArr);
+           })
+           .error(function(err){
+               alert(err);
+           });
+       }
+       else{
+          promise.resolve(rolesArr);
+       }
+       return promise.promise;
+    }
+
+    //
+    function rolesSync(){
+       return rolesArr
+    }
+
+    //
+    return {
+       rolesAsync:rolesAsync,
+       rolesSync:rolesSync
+    }
+
+})
 
 //Filter to convert user data in bulk upload into nicely formatted array of json objects
-.filter('mailFormatter' , function(roles){
+.filter('mailFormatter' , function(Roles){
      //@TODO implement a better validation rule.s
      return function(data){
          if(angular.isArray(data)){
-             var result = {
-                 valid : [],
-                 invalid:[]
-             };
+           var roles = Roles.rolesSync();
+           var result = {
+               valid : [],
+               invalid:[]
+           };
 
-             //data validator
-             function isValidPerson(personStr){
-               var personObj = {status:'pending'};
-               var personDataArr = personStr.split(',');
+           //data validator
+           function isValidPerson(personStr){
+             var personObj = {status:'pending'};
+             var personDataArr = personStr.split(',');
 
-               //test cases
-               var validFirstName = /^[a-zA-Z]*$/.test(personDataArr[0]);
-               var validlastName =  /^[a-zA-Z]*$/.test(personDataArr[1]);
-               var validemail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(personDataArr[2]);
-               var validRole = roles.indexOf(personDataArr[3])>=0;
+             //test cases
+             var validFirstName = /^[a-zA-Z]*$/.test(personDataArr[0]);
+             var validlastName =  /^[a-zA-Z]*$/.test(personDataArr[1]);
+             var validemail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(personDataArr[2]);
+             var validRole = roles.indexOf(personDataArr[3])>=0;
 
-               if(validFirstName && validlastName && validemail && validRole){
-                    personObj.firstname = angular.uppercase(personDataArr[0]);
-                    personObj.lastname = angular.uppercase(personDataArr[1]);
-                    personObj.email = personDataArr[2];
-                    personObj.role = personDataArr[3];
-                    //
-                    return personObj;
+             if(validFirstName && validlastName && validemail && validRole){
+                  personObj.firstname = angular.uppercase(personDataArr[0]);
+                  personObj.lastname = angular.uppercase(personDataArr[1]);
+                  personObj.email = personDataArr[2];
+                  personObj.role = personDataArr[3];
+                  //
+                  return personObj;
+             }
+             else{
+               return -1;
+             }
+           }
+
+
+           for(var i=0; i<data.length; i++){
+               var validPerson = isValidPerson(data[i]);
+               if(validPerson !== -1){
+                   result.valid.push(validPerson);
                }
                else{
-                 return -1;
+                   if(data[i].trim().length!=0){
+                       result.invalid.push(data[i]);
+                   }
                }
-             }
+           }
+           return result;
 
-
-             for(var i=0; i<data.length; i++){
-                 var validPerson = isValidPerson(data[i]);
-                 if(validPerson !== -1){
-                     result.valid.push(validPerson);
-                 }
-                 else{
-                     if(data[i].trim().length!=0){
-                         result.invalid.push(data[i]);
-                     }
-                 }
-             }
-             return result;
          }
          else{
            return data;
@@ -246,37 +273,40 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
 })
 
 //manual Mailer controller
-.controller('manualMailerController' , function($scope , $timeout ,manualMailer , Auth , roles){
-  //
-    $scope.person = {};
-    $scope.person.role = roles[0];
-    $scope.roles = roles;
-    $scope.certImg = 'img/test.png';
-    $scope.error = {msg:'No error at this time' , status:false};
+.controller('manualMailerController' , function($scope , $timeout ,manualMailer , Auth , Roles){
+   Roles.rolesAsync().then(function(roles){
+     //
+      $scope.person = {};
+      $scope.person.role = roles[0];
+      $scope.roles = roles;
+      $scope.certImg = 'img/test.png';
+      $scope.error = {msg:'No error at this time' , status:false};
 
-    //
-    $scope.sendCert = function(person){
-        $scope.sendingCert = true;
-        person.firstname = angular.uppercase(person.firstname);
-        person.lastname = angular.uppercase(person.lastname);
-        manualMailer.sendCert(person).then(
-            function(certImg){
-               $timeout(function(){
-                   var index = certImg.indexOf('img');
-                   $scope.certImg = certImg.substr(index);
-                   console.log($scope.certImg);
-                   $scope.error = {msg:'No error at this time' , status:false};
-                   $scope.sendingCert = false;
-                   $scope.person = {};
-                   $scope.person.role = roles[0];
-               });
-            },
-            function(err){
-                $scope.error = {msg:err , status:true};
-                $scope.sendingCert = false;
-            }
-        );
-    }
+      //
+      $scope.sendCert = function(person){
+          $scope.sendingCert = true;
+          person.firstname = angular.uppercase(person.firstname);
+          person.lastname = angular.uppercase(person.lastname);
+          manualMailer.sendCert(person).then(
+              function(certImg){
+                 $timeout(function(){
+                     var index = certImg.indexOf('img');
+                     $scope.certImg = certImg.substr(index);
+                     console.log($scope.certImg);
+                     $scope.error = {msg:'No error at this time' , status:false};
+                     $scope.sendingCert = false;
+                     $scope.person = {};
+                     $scope.person.role = roles[0];
+                 });
+              },
+              function(err){
+                  $scope.error = {msg:err , status:true};
+                  $scope.sendingCert = false;
+              }
+          );
+      }
+   });
+
 })
 
 //Bulk mailer controller
