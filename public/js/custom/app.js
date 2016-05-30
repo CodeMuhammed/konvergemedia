@@ -333,12 +333,12 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
       $scope.updateConcurrency = function(val){
            if(val > 0){
               if($scope.concurrency < 10){
-                  $scope.concurrency++;
+                  //$scope.concurrency++;
               }
            }
            else{
               if($scope.concurrency > 1){
-                  $scope.concurrency--;
+                  //$scope.concurrency--;
               }
            }
       }
@@ -346,54 +346,38 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
       //
       $scope.sendBulkMails = function(){
            $scope.sendingCerts = true;
-           $scope.sendingQueue = 0;
-           $scope.sent = 0;
-           $scope.sendingIndex = 0;
 
-           function worker(index , cb){
-               $scope.sendingQueue++;
-
-               //Send out certificates to contacts in mailing list
-               manualMailer.sendCert($scope.decodedArr[index]).then(
-                   function(certImg){
-                      $scope.decodedArr[index].status = 'sent';
-                      cb();
-                   },
-                   function(err){
-                      $scope.decodedArr[index].status = 'failed';
-                      cb();
+           (function worker(index){
+               if(index < $scope.decodedArr.length){
+                   var person = $scope.decodedArr[index];
+                   if(person.isValid){
+                       //Send out certificates to contacts in mailing list
+                       manualMailer.sendCert(person).then(
+                           function(certImg){
+                              person.status = 'sent';
+                              worker(++index);
+                           },
+                           function(err){
+                              person.status = 'failed';
+                              worker(++index);
+                           }
+                       );
+                       /*$timeout(function(){
+                         person.status = 'sent';
+                         worker(++index);
+                       } , 3000);*/
                    }
-               );
-           };
+                   else{
+                       //
+                       console.log('Invalid user data at line', index+1);
+                       worker(++index);
+                   }
 
+               }
+               else{
+                  console.log('All valid mail on the list have been sent out');
+               }
 
-           //
-           var interval = $interval(function(){
-                if($scope.sent < $scope.decodedArr.length){
-                     if($scope.sendingQueue < 1){
-                          for(var i=$scope.sendingQueue; i<1; i++){
-                            if($scope.sendingIndex < $scope.decodedArr.length
-                                 && $scope.decodedArr[$scope.sendingIndex].isValid){
-                              worker($scope.sendingIndex++ ,function(){
-                                $scope.sendingQueue--;
-                                $scope.sent++;
-                              });
-                            }
-                            else{
-                               if($scope.decodedArr[$scope.sendingIndex].isValid){
-                                  $scope.sent++;
-                                  $scope.sendingIndex++;
-                               }
-                            }
-                          }
-                      }
-                }
-                else{
-                   console.log('All emails have been sent out');
-                   $interval.cancel(interval);
-                   $scope.sendingCerts = false;
-                }
-           } , 2000);
-
+           })(0);
       }
 });
