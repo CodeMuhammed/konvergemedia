@@ -372,11 +372,18 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
                 if($scope.sent < $scope.decodedArr.length){
                      if($scope.sendingQueue < 1){
                           for(var i=$scope.sendingQueue; i<1; i++){
-                            if($scope.sendingIndex < $scope.decodedArr.length && $scope.decodedArr[$scope.sendingIndex].isValid){
+                            if($scope.sendingIndex < $scope.decodedArr.length
+                                 && $scope.decodedArr[$scope.sendingIndex].isValid){
                               worker($scope.sendingIndex++ ,function(){
                                 $scope.sendingQueue--;
                                 $scope.sent++;
                               });
+                            }
+                            else{
+                               if($scope.decodedArr[$scope.sendingIndex].isValid){
+                                  $scope.sent++;
+                                  $scope.sendingIndex++;
+                               }
                             }
                           }
                       }
