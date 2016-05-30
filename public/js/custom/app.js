@@ -117,10 +117,7 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
      return function(data){
          if(angular.isArray(data)){
            var roles = Roles.rolesSync();
-           var result = {
-               valid : [],
-               invalid:[]
-           };
+           var result = [];
 
            //data validator
            function isValidPerson(personStr){
@@ -128,35 +125,30 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
              var personDataArr = personStr.split(',');
 
              //test cases
-             var validFirstName = /^[a-zA-Z]*$/.test(personDataArr[0]);
-             var validlastName =  /^[a-zA-Z]*$/.test(personDataArr[1]);
+             var validFirstName = /^[a-zA-Z]/.test(personDataArr[0]);
+             var validlastName =  /^[a-zA-Z]/.test(personDataArr[1]);
              var validemail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(personDataArr[2]);
              var validRole = roles.indexOf(personDataArr[3])>=0;
 
+             //compile result
+             personObj.firstname = angular.uppercase(personDataArr[0]);
+             personObj.lastname = angular.uppercase(personDataArr[1]);
+             personObj.email = personDataArr[2];
+             personObj.role = personDataArr[3];
+
              if(validFirstName && validlastName && validemail && validRole){
-                  personObj.firstname = angular.uppercase(personDataArr[0]);
-                  personObj.lastname = angular.uppercase(personDataArr[1]);
-                  personObj.email = personDataArr[2];
-                  personObj.role = personDataArr[3];
-                  //
-                  return personObj;
+                  return [personObj , true];
              }
              else{
-               return -1;
+               return [personObj , false];
              }
            }
 
-
            for(var i=0; i<data.length; i++){
                var validPerson = isValidPerson(data[i]);
-               if(validPerson !== -1){
-                   result.valid.push(validPerson);
-               }
-               else{
-                   if(data[i].trim().length!=0){
-                       result.invalid.push(data[i]);
-                   }
-               }
+               validPerson[0].isValid = validPerson[1];
+               validPerson[0].line = i+1; //The line the data appeared in the csv file
+               result.push(validPerson[0]);
            }
            return result;
 
@@ -319,14 +311,22 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
 
              //use custom filer to format data
              $scope.decodedArr = $filter('mailFormatter')(rawDataArr);
+             $scope.formatError = function(){
+                 var result = 0;
+                 for(var i=0; i<$scope.decodedArr.length; i++){
+                     var data = $scope.decodedArr[i];
+                     if(!data.isValid){
+                        result++;
+                     }
+                 }
+                 return result
+             }
            });
       }
       $scope.myError = function(err){
            console.log(err);
       }
-      $scope.myprogress = function(total , loaded){
-           console.log(total  , loaded);
-      }
+
 
       //
       $scope.concurrency = 1;
@@ -354,13 +354,13 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
                $scope.sendingQueue++;
 
                //Send out certificates to contacts in mailing list
-               manualMailer.sendCert($scope.decodedArr.valid[index]).then(
+               manualMailer.sendCert($scope.decodedArr[index]).then(
                    function(certImg){
-                      $scope.decodedArr.valid[index].status = 'sent';
+                      $scope.decodedArr[index].status = 'sent';
                       cb();
                    },
                    function(err){
-                      $scope.decodedArr.valid[index].status = 'failed';
+                      $scope.decodedArr[index].status = 'failed';
                       cb();
                    }
                );
@@ -369,10 +369,10 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
 
            //
            var interval = $interval(function(){
-                if($scope.sent < $scope.decodedArr.valid.length){
+                if($scope.sent < $scope.decodedArr.length){
                      if($scope.sendingQueue < 1){
                           for(var i=$scope.sendingQueue; i<1; i++){
-                            if($scope.sendingIndex < $scope.decodedArr.valid.length){
+                            if($scope.sendingIndex < $scope.decodedArr.length && $scope.decodedArr[$scope.sendingIndex].isValid){
                               worker($scope.sendingIndex++ ,function(){
                                 $scope.sendingQueue--;
                                 $scope.sent++;
