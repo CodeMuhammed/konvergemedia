@@ -376,6 +376,7 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
                }
                else{
                   console.log('All valid mail on the list have been sent out');
+                   $scope.sendingCerts = false;
                }
 
            })(0);
