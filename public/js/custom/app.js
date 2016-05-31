@@ -117,9 +117,23 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
 
 })
 
+//This capitalizes the initial letter of a word
+.filter('capitalize' , function(){
+     return function(data){
+          if(angular.isString(data)){
+              var firstCh = angular.uppercase(data.substr(0,1));
+              var restCh = angular.lowercase(data.substr(1));
+              return firstCh+restCh;
+          }
+          else{
+            return data;
+          }
+     }
+})
+
 //Filter to convert user data in bulk upload into nicely formatted array of json objects
-.filter('mailFormatter' , function(Roles){
-     //@TODO implement a better validation rule.s
+.filter('mailFormatter' , function(Roles , $filter){
+     //
      return function(data){
          if(angular.isArray(data)){
            var roles = Roles.rolesSync();
@@ -137,8 +151,8 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
              var validRole = roles.indexOf(personDataArr[3])>=0;
 
              //compile result
-             personObj.firstname = angular.uppercase(personDataArr[0]);
-             personObj.lastname = angular.uppercase(personDataArr[1]);
+             personObj.firstname =  $filter('capitalize')(personDataArr[0]);
+             personObj.lastname =  $filter('capitalize')(personDataArr[1]);
              personObj.email = personDataArr[2];
              personObj.role = personDataArr[3];
 
@@ -270,56 +284,8 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
      }
 })
 
-//
-.controller('dragController'  , function($scope){
-     $scope.hello = 'drag';
-     $scope.YC = 0;
-     $scope.XC = 0;
-
-     //
-     $scope.recordParent = function(e){
-         $scope.parentX = e.layerX;
-         $scope.parentY = e.layerY;
-
-         if($scope.pinned){
-            $scope.XC = $scope.parentX-$scope.pinX;
-            $scope.YC = $scope.parentY-$scope.pinY;
-         }
-     }
-
-     //
-     $scope.recordChild = function(e){
-         var dx = $scope.childX - e.layerX;
-         var dy = $scope.childY - e.layerY;
-         $scope.childX = e.layerX;
-         $scope.childY = e.layerY;
-
-         if($scope.pinned){
-            $scope.XC = $scope.parentX+dx;
-            $scope.YC = $scope.parentY+dy;
-         }
-     }
-
-     //
-     $scope.recordDown  = function(e){
-         $scope.pinned = true;
-         $scope.pinX = e.layerX;
-         $scope.pinY = e.layerY;
-     }
-
-     $scope.recordUp  = function(e){
-         $scope.pinned = false;
-     }
-
-     //
-     $scope.notifyParent = function(e){
-         $scope.eChildX = e.layerX;
-         $scope.eChildY = e.layerY;
-     }
-})
-
 //manual Mailer controller
-.controller('manualMailerController' , function($scope , $timeout ,manualMailer , Auth , Roles){
+.controller('manualMailerController' , function($scope , $timeout , $filter ,manualMailer , Auth , Roles){
    Roles.rolesAsync().then(function(roles){
      //
       $scope.person = {};
@@ -331,8 +297,8 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
       //
       $scope.sendCert = function(person){
           $scope.sendingCert = true;
-          person.firstname = angular.uppercase(person.firstname);
-          person.lastname = angular.uppercase(person.lastname);
+          person.firstname = $filter('capitalize')(person.firstname);
+          person.lastname = $filter('capitalize')(person.lastname);
           manualMailer.sendCert(person).then(
               function(certImg){
                  $timeout(function(){
@@ -435,4 +401,82 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
 
            })(0);
       }
+})
+
+//
+.controller('dragController'  , function($scope , $timeout){
+
+
+     //
+     $scope.certTemplate = {
+         img : 'img/Trainer-ZA.jpg',
+         color:'#000',
+         size:12,
+         font:'Arial',
+         categoryName:'categoryName',
+         x:200,
+         y:200
+     };
+
+     $scope.file = {};
+     $scope.myLoaded = function(){
+          $timeout(function(){
+               $scope.certTemplate.img = $scope.file.data;
+          });
+     }
+     $scope.myError = function(err){
+          console.log(err);
+     }
+
+     //
+     $scope.recordParent = function(e){
+         $scope.parentX = e.layerX;
+         $scope.parentY = e.layerY;
+
+         if($scope.pinned){
+            $scope.certTemplate.x = $scope.parentX-$scope.pinX;
+            $scope.certTemplate.y = $scope.parentY-$scope.pinY;
+         }
+     }
+
+     //
+     $scope.recordChild = function(e){
+         var dx = $scope.childX - e.layerX;
+         var dy = $scope.childY - e.layerY;
+         $scope.childX = e.layerX;
+         $scope.childY = e.layerY;
+
+         if($scope.pinned){
+            $scope.certTemplate.x = $scope.parentX+dx;
+            $scope.certTemplate.y = $scope.parentY+dy;
+         }
+     }
+
+     //
+     $scope.recordDown  = function(e){
+         $scope.pinned = true;
+         $scope.pinX = e.layerX;
+         $scope.pinY = e.layerY;
+     }
+
+     $scope.recordUp  = function(e){
+         $scope.pinned = false;
+     }
+
+     //
+     $scope.notifyEnter = function(e){
+         $scope.eChildX = e.layerX;
+         $scope.eChildY = e.layerY;
+     }
+
+     //
+     $scope.notifyLeave = function(e){
+         $scope.lChildX = e.layerX;
+         $scope.lChildY = e.layerY;
+         if($scope.pinned){
+           $scope.certTemplate.x = e.layerX - $scope.pinX;
+           $scope.certTemplate.y = e.layerY - $scope.pinY;
+         }
+
+     }
 });

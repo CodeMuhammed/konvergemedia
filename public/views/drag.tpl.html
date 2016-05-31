@@ -1,23 +1,32 @@
-<div class="col-sm-3">
-  <input type="text" class="form-control" ng-model="hello">
-  Parent event : x: {{parentX}}, y:{{parentY}} <br>
-  Child event : x: {{childX}}, y:{{childY}} <br>
-  Mouse Pinned : {{pinned}} <br>
-  enter child : x: {{eChildX}}, y:{{eChildY}}<br>
-  XC : {{XC}}<br>
-  YC : {{YC}}<br>
-</div>
-<div class="col-sm-6 text-center">
-     <h1>Drag test</h1>
-     <span style="padding:0;display:inline-block; width:400px; height:400px;
-        border:1px solid blue; position:relative"
+<div class="col-xs-12">
+     <h1>Drag text to preferred location</h1>
+     <span style="padding:0;display:inline-block; width:600px; height:600px;
+        border:2px solid #ccc; position:relative"
           ng-mousemove="recordParent($event)">
-           <span class="btn btn-default" style="display:inline-block; height:2em;
-               position:absolute; top:{{YC}}px;left:{{XC}}px;font-size:1.5em;
-               background-color:#fff" ng-mousemove="recordChild($event)"
-               ng-mouseenter="notifyParent($event)"
+           <img ng-src="{{certTemplate.img}}" alt="" / style="width:100%; z-index:-1">
+           <span class="btn btn-default" style="border-radius:0; display:inline-block;padding:.3em;
+               position:absolute; top:{{certTemplate.y}}px;left:{{certTemplate.x}}px;font-size:1.5em;
+               background-color:#fff; background-color:rgba(255 , 255 , 255, .2);border:none; box-shadow:none" ng-mousemove="recordChild($event)"
+               ng-mouseenter="notifyEnter($event)" ng-mouseleave="notifyLeave($event)"
                ng-mouseup="recordUp($event)" ng-mousedown="recordDown($event)">
-                 {{hello}}
+                 <span style="font-size:{{certTemplate.size}}px;color:{{certTemplate.color}};font-weight:bold;font-family:{{'Arial'}}">{{certTemplate.categoryName}}</span>
            </span>
      </span>
+     <div class="col-sm-3" style="padding-left:0">
+       <span style="">
+            <input type="file" ng-model="file.data" file-select="data" file-loaded="myLoaded()" file-error="myError($error)" file-progress="myProgress($total,$loaded)">
+       </span>
+       <input type="text" class="form-control" placeholder="Enter category name" ng-model="certTemplate.categoryName">
+       <input type="number" class="form-control" placeholder="Adjust font size" ng-model="certTemplate.size">
+       <input type="text" class="form-control" placeholder="Enter # based color" ng-model="certTemplate.color">
+       <span style="margin-left:-10000px; display:block;">
+           Parent event : x: {{parentX}}, y:{{parentY}} <br>
+           Child event : x: {{childX}}, y:{{childY}} <br>
+           Mouse Pinned : {{pinned}} <br>
+           Enter child : x: {{eChildX}}, y:{{eChildY}}<br>
+           Leave child : x: {{lChildX}}, y:{{lChildY}}<br>
+           XC : {{XC}}<br>
+           YC : {{YC}}<br>
+       </span>
+     </div>
 </div>
