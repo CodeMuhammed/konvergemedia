@@ -12,9 +12,15 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
                  templateUrl : 'views/home.tpl.html',
                  controller : 'homeController',
                  data :{}
+             })
+             .state('drag' , {
+                 url : '/drag',
+                 templateUrl : 'views/drag.tpl.html',
+                 controller : 'dragController',
+                 data :{}
              });
 
-             $urlRouterProvider.otherwise('/home');
+             $urlRouterProvider.otherwise('/drag');
         }
 ])
 
@@ -261,6 +267,54 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
      //
      $scope.resetError = function(){
          $scope.loginError = undefined;
+     }
+})
+
+//
+.controller('dragController'  , function($scope){
+     $scope.hello = 'drag';
+     $scope.YC = 0;
+     $scope.XC = 0;
+
+     //
+     $scope.recordParent = function(e){
+         $scope.parentX = e.layerX;
+         $scope.parentY = e.layerY;
+
+         if($scope.pinned){
+            $scope.XC = $scope.parentX-$scope.pinX;
+            $scope.YC = $scope.parentY-$scope.pinY;
+         }
+     }
+
+     //
+     $scope.recordChild = function(e){
+         var dx = $scope.childX - e.layerX;
+         var dy = $scope.childY - e.layerY;
+         $scope.childX = e.layerX;
+         $scope.childY = e.layerY;
+
+         if($scope.pinned){
+            $scope.XC = $scope.parentX+dx;
+            $scope.YC = $scope.parentY+dy;
+         }
+     }
+
+     //
+     $scope.recordDown  = function(e){
+         $scope.pinned = true;
+         $scope.pinX = e.layerX;
+         $scope.pinY = e.layerY;
+     }
+
+     $scope.recordUp  = function(e){
+         $scope.pinned = false;
+     }
+
+     //
+     $scope.notifyParent = function(e){
+         $scope.eChildX = e.layerX;
+         $scope.eChildY = e.layerY;
      }
 })
 

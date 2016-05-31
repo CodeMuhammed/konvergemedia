@@ -1,0 +1,23 @@
+<div class="col-sm-3">
+  <input type="text" class="form-control" ng-model="hello">
+  Parent event : x: {{parentX}}, y:{{parentY}} <br>
+  Child event : x: {{childX}}, y:{{childY}} <br>
+  Mouse Pinned : {{pinned}} <br>
+  enter child : x: {{eChildX}}, y:{{eChildY}}<br>
+  XC : {{XC}}<br>
+  YC : {{YC}}<br>
+</div>
+<div class="col-sm-6 text-center">
+     <h1>Drag test</h1>
+     <span style="padding:0;display:inline-block; width:400px; height:400px;
+        border:1px solid blue; position:relative"
+          ng-mousemove="recordParent($event)">
+           <span class="btn btn-default" style="display:inline-block; height:2em;
+               position:absolute; top:{{YC}}px;left:{{XC}}px;font-size:1.5em;
+               background-color:#fff" ng-mousemove="recordChild($event)"
+               ng-mouseenter="notifyParent($event)"
+               ng-mouseup="recordUp($event)" ng-mousedown="recordDown($event)">
+                 {{hello}}
+           </span>
+     </span>
+</div>
