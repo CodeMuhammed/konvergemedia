@@ -6,8 +6,9 @@
            <img ng-src="{{certTemplate.img}}" alt="" / style="width:100%; z-index:-1">
            <span class="btn btn-default" style="border-radius:0; display:inline-block;padding:.3em;
                position:absolute; top:{{certTemplate.y}}px;left:{{certTemplate.x}}px;font-size:1.5em;
-               background-color:#fff; background-color:rgba(255 , 255 , 255, .2);border:none; box-shadow:none" ng-mousemove="recordChild($event)"
-               ng-mouseup="recordUp($event)" ng-mousedown="recordDown($event)">
+                   background-color:rgba(255 , 255 , 255, .1);border:none; box-shadow:none"
+                   ng-mousemove="recordChild($event)"
+                   ng-click="recordDown($event)">
                  <span style="font-size:{{certTemplate.size}}px;color:{{certTemplate.color}};font-weight:bold;font-family:{{certTemplate.font}}">{{certTemplate.categoryName}}</span>
            </span>
      </span>

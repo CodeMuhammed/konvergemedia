@@ -438,7 +438,9 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
          if($scope.pinned){
             //@TODO set boundaries
             if(e.clientX-$scope.pinX-$scope.mL >= 0
-                 && e.clientY-$scope.pinY-$scope.mT >=0){
+                 && e.clientY-$scope.pinY-$scope.mT >=0
+                   && e.clientX-$scope.mL+(e.target.offsetWidth+(e.target.offsetLeft*2)-$scope.pinX) <=$scope.box
+                     && e.clientY-$scope.mT+(e.target.offsetHeight+(e.target.scrollHeight/2)-$scope.pinY) <=$scope.box){
                 $scope.certTemplate.x = e.clientX-$scope.pinX-$scope.mL;
                 $scope.certTemplate.y = e.clientY-$scope.pinY-$scope.mT;
             }
@@ -447,14 +449,12 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
      }
 
      //
+     $scope.pinned = false;
      $scope.recordDown  = function(e){
-         $scope.pinned = true;
+         console.log(e.target);
+         $scope.pinned = !$scope.pinned;
          $scope.pinX = e.layerX;
          $scope.pinY = e.layerY;
-     }
-
-     $scope.recordUp  = function(e){
-         $scope.pinned = false;
      }
 
 });
