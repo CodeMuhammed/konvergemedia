@@ -411,9 +411,9 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
      $scope.certTemplate = {
          img : 'img/Trainer-ZA.jpg',
          color:'#000',
-         size:12,
+         size:30,
          font:'Arial',
-         categoryName:'categoryName',
+         categoryName:'Recipient\'s Name',
          x:200,
          y:200
      };
