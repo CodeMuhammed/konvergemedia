@@ -405,11 +405,13 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
 
 //
 .controller('dragController'  , function($scope , $timeout){
-
+     $scope.mT = 80;
+     $scope.mL = 400;
+     $scope.box = 600;
 
      //
      $scope.certTemplate = {
-         img : 'img/Trainer-ZA.jpg',
+         img : '',
          color:'#000',
          size:30,
          font:'Arial',
@@ -430,25 +432,17 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
 
      //
      $scope.recordParent = function(e){
-         $scope.parentX = e.layerX;
-         $scope.parentY = e.layerY;
+         $scope.parentX = e.clientX;
+         $scope.parentY = e.clientY;
 
          if($scope.pinned){
-            $scope.certTemplate.x = $scope.parentX-$scope.pinX;
-            $scope.certTemplate.y = $scope.parentY-$scope.pinY;
-         }
-     }
+            //@TODO set boundaries
+            if(e.clientX-$scope.pinX-$scope.mL >= 0
+                 && e.clientY-$scope.pinY-$scope.mT >=0){
+                $scope.certTemplate.x = e.clientX-$scope.pinX-$scope.mL;
+                $scope.certTemplate.y = e.clientY-$scope.pinY-$scope.mT;
+            }
 
-     //
-     $scope.recordChild = function(e){
-         var dx = $scope.childX - e.layerX;
-         var dy = $scope.childY - e.layerY;
-         $scope.childX = e.layerX;
-         $scope.childY = e.layerY;
-
-         if($scope.pinned){
-            $scope.certTemplate.x = $scope.parentX+dx;
-            $scope.certTemplate.y = $scope.parentY+dy;
          }
      }
 
@@ -463,20 +457,4 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
          $scope.pinned = false;
      }
 
-     //
-     $scope.notifyEnter = function(e){
-         $scope.eChildX = e.layerX;
-         $scope.eChildY = e.layerY;
-     }
-
-     //
-     $scope.notifyLeave = function(e){
-         $scope.lChildX = e.layerX;
-         $scope.lChildY = e.layerY;
-         if($scope.pinned){
-           $scope.certTemplate.x = e.layerX - $scope.pinX;
-           $scope.certTemplate.y = e.layerY - $scope.pinY;
-         }
-
-     }
 });

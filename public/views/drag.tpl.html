@@ -1,32 +1,30 @@
 <div class="col-xs-12">
      <h1>Drag Text to preferred position (project price: NGN 100,000)</h1>
-     <span style="padding:0;display:inline-block; width:600px; height:600px;
-        border:2px solid #ccc; position:relative"
+     <span style="padding:0;display:inline-block; width:{{box}}px; height:{{box}}px;
+        border:2px solid #ccc; position:absolute;left:0;top:0; margin-left:{{mL}}px; margin-top:{{mT}}px"
           ng-mousemove="recordParent($event)">
            <img ng-src="{{certTemplate.img}}" alt="" / style="width:100%; z-index:-1">
            <span class="btn btn-default" style="border-radius:0; display:inline-block;padding:.3em;
                position:absolute; top:{{certTemplate.y}}px;left:{{certTemplate.x}}px;font-size:1.5em;
                background-color:#fff; background-color:rgba(255 , 255 , 255, .2);border:none; box-shadow:none" ng-mousemove="recordChild($event)"
-               ng-mouseenter="notifyEnter($event)" ng-mouseleave="notifyLeave($event)"
                ng-mouseup="recordUp($event)" ng-mousedown="recordDown($event)">
-                 <span style="font-size:{{certTemplate.size}}px;color:{{certTemplate.color}};font-weight:bold;font-family:{{'Arial'}}">{{certTemplate.categoryName}}</span>
+                 <span style="font-size:{{certTemplate.size}}px;color:{{certTemplate.color}};font-weight:bold;font-family:{{certTemplate.font}}">{{certTemplate.categoryName}}</span>
            </span>
      </span>
      <div class="col-sm-3" style="padding-left:0">
-       <span style="">
+       <span  style="margin-bottom:1em; display:block">
+            <span style="font-size:1em; font-style:italic; font-weight:bold">Select a certificate template</span>
             <input type="file" ng-model="file.data" file-select="data" file-loaded="myLoaded()" file-error="myError($error)" file-progress="myProgress($total,$loaded)">
        </span>
-       <input type="text" class="form-control" placeholder="Enter category name" ng-model="certTemplate.categoryName">
-       <input type="number" class="form-control" placeholder="Adjust font size" ng-model="certTemplate.size">
-       <input type="text" class="form-control" placeholder="Enter # based color" ng-model="certTemplate.color">
-       <span style="margin-left:-10000px; display:block;">
+       <input type="text" class="form-control" placeholder="Enter category name" ng-model="certTemplate.categoryName" style="margin-bottom:1em">
+       <input type="number" class="form-control" placeholder="Adjust font size" ng-model="certTemplate.size"  style="margin-bottom:1em">
+       <input type="text" class="form-control" placeholder="Enter # based color" ng-model="certTemplate.color"  style="margin-bottom:1em">
+       <input type="text" class="form-control" placeholder="Enter font type here" ng-model="certTemplate.font"  style="margin-bottom:1em">
+       <span style="display:block;">
            Parent event : x: {{parentX}}, y:{{parentY}} <br>
-           Child event : x: {{childX}}, y:{{childY}} <br>
+           move : x{{certTemplate.x}}, y:{{certTemplate.y}}<br>
+           Pin event : x: {{pinX}}, y: {{pinY}}<br>
            Mouse Pinned : {{pinned}} <br>
-           Enter child : x: {{eChildX}}, y:{{eChildY}}<br>
-           Leave child : x: {{lChildX}}, y:{{lChildY}}<br>
-           XC : {{XC}}<br>
-           YC : {{YC}}<br>
        </span>
      </div>
 </div>
