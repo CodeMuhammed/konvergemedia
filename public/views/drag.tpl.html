@@ -1,7 +1,7 @@
 <div class="col-xs-12">
      <h1>Drag Text to preferred position (project price: NGN 100,000)</h1>
      <span style="padding:0;display:inline-block; width:{{box}}px; height:{{box}}px;
-        border:2px solid #ccc; position:absolute;left:0;top:0; margin-left:{{mL}}px; margin-top:{{mT}}px"
+        outline:1px dotted #ccc; position:absolute;left:0;top:0; margin-left:{{mL}}px; margin-top:{{mT}}px"
           ng-mousemove="recordParent($event)">
            <img ng-src="{{certTemplate.img}}" alt="" / style="width:100%; z-index:-1">
            <span class="btn btn-default" style="border-radius:0; display:inline-block;padding:.3em;
@@ -19,10 +19,9 @@
        </span>
        <input type="text" class="form-control" placeholder="Enter category name" ng-model="certTemplate.categoryName" style="margin-bottom:1em">
        <input type="number" class="form-control" placeholder="Adjust font size" ng-model="certTemplate.size"  style="margin-bottom:1em">
-       <input type="text" class="form-control" placeholder="Enter # based color" ng-model="certTemplate.color"  style="margin-bottom:1em">
+       <input type="text" class="form-control" placeholder="Enter color name or #" ng-model="certTemplate.color"  style="margin-bottom:1em">
        <input type="text" class="form-control" placeholder="Enter font type here" ng-model="certTemplate.font"  style="margin-bottom:1em">
        <span style="display:block;">
-           Parent event : x: {{parentX}}, y:{{parentY}} <br>
            move : x{{certTemplate.x}}, y:{{certTemplate.y}}<br>
            Pin event : x: {{pinX}}, y: {{pinY}}<br>
            Mouse Pinned : {{pinned}} <br>

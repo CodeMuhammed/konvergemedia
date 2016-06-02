@@ -432,9 +432,6 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
 
      //
      $scope.recordParent = function(e){
-         $scope.parentX = e.clientX;
-         $scope.parentY = e.clientY;
-
          if($scope.pinned){
             //@TODO set boundaries
             if(e.clientX-$scope.pinX-$scope.mL >= 0
