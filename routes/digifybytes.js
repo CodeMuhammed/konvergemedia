@@ -113,7 +113,7 @@ module.exports = function(emailClient , certClient){
 									lastname : req.query.lastname || 'MAYS',
 									certUrl : baseUrl+'img/'+roles[index]+'.jpg',
 									position : index<=1? '415' : '340',
-								  color: '#BC5192',
+								  color: index<=1? '#BC5192':'#B635F0',
 									fontSize:index<=1? '2.5em' : '3.5em',
 							};
 

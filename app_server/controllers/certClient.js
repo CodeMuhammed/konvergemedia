@@ -31,7 +31,7 @@ module.exports = function(){
 			spooky.then([{DNF:dirNamedFile , DIF:dirImgFile} , function(){
 				this.waitForSelector('div.cert' , function(){
 				    this.capture(DNF+'.pdf' , undefined , {quality:100});
-					  this.capture(DIF+'.jpg' , undefined , {quality:100});
+					  this.capture(DIF+'.jpg' , undefined , {quality:50});
 				    this.emit('done' , 'screenshot captured');
 			    } , function(){
 						 this.emit('error' , 'screenshot captured');
