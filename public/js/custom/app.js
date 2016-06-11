@@ -14,7 +14,7 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
                  data :{}
              })
              .state('drag' , {
-                 url : '/drag',
+                 url : '/home',
                  templateUrl : 'views/drag.tpl.html',
                  controller : 'dragController',
                  data :{}
