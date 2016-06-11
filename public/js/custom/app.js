@@ -145,9 +145,9 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
              var personDataArr = personStr.split(',');
 
              //test cases
-             var validFirstName = /^[a-zA-Z]/.test(personDataArr[0]);
-             var validlastName =  /^[a-zA-Z]/.test(personDataArr[1]);
-             var validemail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(personDataArr[2]);
+             var validFirstName = /^[a-zA-Z]/.test(personDataArr[0].trim());
+             var validlastName =  /^[a-zA-Z]/.test(personDataArr[1].trim());
+             var validemail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(personDataArr[2].trim());
              var validRole = roles.indexOf(personDataArr[3])>=0;
 
              //compile result
