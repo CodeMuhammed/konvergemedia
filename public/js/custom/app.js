@@ -14,13 +14,13 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
                  data :{}
              })
              .state('drag' , {
-                 url : '/home',
+                 url : '/drag',
                  templateUrl : 'views/drag.tpl.html',
                  controller : 'dragController',
                  data :{}
              });
 
-             $urlRouterProvider.otherwise('/drag');
+             $urlRouterProvider.otherwise('/home');
         }
 ])
 
