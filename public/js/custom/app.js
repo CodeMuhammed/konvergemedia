@@ -140,9 +140,14 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
            var result = [];
 
            //data validator
-           function isValidPerson(personStr){
+           function isValidPerson(personArr){
              var personObj = {status:'pending'};
-             var personDataArr = personStr.split(',');
+             var personDataArr = personArr;
+
+             //
+             for(var i=personDataArr.length; i<4; i++){
+                 personDataArr[i] = '';
+             }
 
              //test cases
              var validFirstName = /^[a-zA-Z]/.test(personDataArr[0].trim());
@@ -157,21 +162,31 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
              personObj.role = personDataArr[3];
 
              if(validFirstName && validlastName && validemail && validRole){
-                  return [personObj , true];
+                  personObj.isValid = true;
+                  personObj.linesValid = [validFirstName , validlastName , validemail , validRole];
+                  return personObj;
              }
              else{
-               return [personObj , false];
+                 personObj.isValid = false;
+                 personObj.linesValid = [validFirstName , validlastName , validemail , validRole];
+                 return personObj;
              }
            }
 
+           //
            for(var i=0; i<data.length; i++){
-               var validPerson = isValidPerson(data[i]);
-               validPerson[0].isValid = validPerson[1];
-               validPerson[0].line = i+1; //The line the data appeared in the csv file
-               result.push(validPerson[0]);
+               if(i == data.length-1 && data[i].length==1){
+                   //
+                   console.log('last line is an empty string');
+               }
+               else{
+                 var validPerson = isValidPerson(data[i]);
+                 validPerson.line = i+1; //The line the data appeared in the csv file
+                 result.push(validPerson);
+               }
+
            }
            return result;
-
          }
          else{
            return data;
@@ -327,20 +342,28 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
       $scope.myLoaded = function(){
            $timeout(function(){
              $scope.file.data = $scope.file.data.substr($scope.file.data.indexOf(',')+1);
-             var rawDataArr = $window.atob($scope.file.data).split('\n');
-
              //use custom filer to format data
-             $scope.decodedArr = $filter('mailFormatter')(rawDataArr);
-             $scope.formatError = function(){
-                 var result = 0;
-                 for(var i=0; i<$scope.decodedArr.length; i++){
-                     var data = $scope.decodedArr[i];
-                     if(!data.isValid){
-                        result++;
-                     }
-                 }
-                 return result
-             }
+             Papa.parse($window.atob($scope.file.data) , {
+               complete: function(result){
+                   $timeout(function(){
+                       $scope.decodedArr = $filter('mailFormatter')(result.data);
+
+                       $scope.formatError = function(){
+                          var result = 0;
+                          for(var i=0; i<$scope.decodedArr.length; i++){
+                              var data = $scope.decodedArr[i];
+                              if(!data.isValid){
+                                 result++;
+                              }
+                          }
+                          return result
+                       }
+                   });
+               },
+               error: function(err){
+                   alert('Invalid txt or csv file');
+               }
+             });
            });
       }
       $scope.myError = function(err){
@@ -364,9 +387,9 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
       }
 
       //
+      $scope.index = 0;
       $scope.sendBulkMails = function(){
            $scope.sendingCerts = true;
-
            (function worker(index){
                if(index < $scope.decodedArr.length){
                    var person = $scope.decodedArr[index];
@@ -376,10 +399,12 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
                            function(certImg){
                               person.status = 'sent';
                               worker(++index);
+                              $scope.index++;
                            },
                            function(err){
                               person.status = 'failed';
                               worker(++index);
+                              $scope.index++;
                            }
                        );
                        /*$timeout(function(){

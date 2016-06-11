@@ -77,7 +77,7 @@
                           <button class="btn btn-sm btn-primary pull-right" style="border-radius:0"
                                  ng-click="sendBulkMails()" ng-disabled="sendingCerts || decodedArr.valid.length<=0">
                               <span ng-show="!sendingCerts">Send certificates</span>
-                              <span ng-show="sendingCerts"><i class="icon fa fa-spinner fa-spin"></i> Sending certificates ....</span>
+                              <span ng-show="sendingCerts"><i class="icon fa fa-spinner fa-spin"></i> Sending certificates .... {{index}} of {{decodedArr.length-formatError()}}</span>
                           </button>
 
                       </h4>
@@ -94,12 +94,12 @@
                                 <th>Status</th>
                            </thead>
                            <tbody>
-                                <tr ng-repeat="data in decodedArr" style="background-color:{{data.isValid?'':'#d9534f'}}; color:{{data.isValid?'#000':'#fff'}}">
+                                <tr ng-repeat="data in decodedArr">
                                     <td>{{data.line}}</td>
-                                    <td>{{data.firstname}}</td>
-                                    <td>{{data.lastname}}</td>
-                                    <td>{{data.email}}</td>
-                                    <td>{{data.role}}</td>
+                                    <td style="background-color:{{data.linesValid[0]?'':'#d9534f'}}; color:{{data.linesValid[0]?'#000':'#fff'}}">{{data.firstname}}</td>
+                                    <td style="background-color:{{data.linesValid[1]?'':'#d9534f'}}; color:{{data.linesValid[1]?'#000':'#fff'}}">{{data.lastname}}</td>
+                                    <td style="background-color:{{data.linesValid[2]?'':'#d9534f'}}; color:{{data.linesValid[2]?'#000':'#fff'}}">{{data.email}}</td>
+                                    <td style="background-color:{{data.linesValid[3]?'':'#d9534f'}}; color:{{data.linesValid[3]?'#000':'#fff'}}">{{data.role}}</td>
                                     <td>{{data.status}}</td>
                                 </tr>
                            </tbody>
