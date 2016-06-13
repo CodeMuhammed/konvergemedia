@@ -19,7 +19,7 @@ module.exports = function(){
     		   from: 'Digify Africa <certificate@digifyafrica.com>',
     		   to: email, // An array if you have multiple recipients.
     		   //cc:'hello@palingram.com',
-    		   bcc:'hello@palingram.com',
+    		   //bcc:'hello@palingram.com',
     		   subject: subject,
     		   'h:Reply-To': 'certificate@digifyafrica.com',
     		   html: htmlData,

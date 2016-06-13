@@ -3,10 +3,11 @@ var router = express.Router();
 var path = require('path');
 
 /*This api is responsible for sending certificates to digifyBytes graduates*/
-module.exports = function(emailClient , certClient){
+module.exports = function(emailClient , certClient , dbResource){
 	console.log('Digify Bytes Loaded');
+  var DigifyList = dbResource.model('DigifyList');
 
-	////
+	//
 	var roles = [
 	     'Trainer-AfricaWide',
 	     'Trainer-ZA',
@@ -81,13 +82,23 @@ module.exports = function(emailClient , certClient){
 								}
 								else{
 									sendEmail(person, cert , function(err , status){
-										 if(err){
-											res.status(500).send(err);
-										 }
-										 else{
-											 console.log(status);
-											 res.status(200).send(certImg);
-										 }
+											 if(err){
+											  	res.status(500).send(err);
+											 }
+											 else{
+													 //Save user to database
+													 //@TODO create a new sandbox for email list on mongolab
+													 //@params dbName , connectionString
+													 DigifyList.update({email:person.email} , person , {upsert:true} , function(err , stats){
+														    if(err){
+																	  console.log('There was an error saving data');
+																		res.status(200).send(certImg);
+																}
+																else{
+																	 res.status(200).send(certImg);
+																}
+													 });
+											 }
 									});
 								}
 						});

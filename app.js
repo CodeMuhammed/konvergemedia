@@ -15,7 +15,7 @@ var path = require('path');
 var app = express();
 
 //set the model source
-var dbResource = require('./app_server/models/dbResource')('restapi' , {} , app);
+var dbResource = require('./app_server/models/dbResource')('digify' , {} , app);
 
 //initialize database
 dbResource.initColls(function(){
@@ -46,7 +46,7 @@ dbResource.initColls(function(){
   app.use(express.static(path.join(__dirname , 'public')));
 
 	//Certificate mailer routeEvents
-	app.use('/digifyBytes' , require('./routes/digifybytes')(emailClient , certClient));
+	app.use('/digifyBytes' , require('./routes/digifybytes')(emailClient , certClient, dbResource));
 
 	//handle errors using custom or 3rd party middle-wares
 	app.use(errorHandler());
