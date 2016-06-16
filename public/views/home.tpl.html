@@ -40,7 +40,7 @@
     </div>
 
 </div>
-<div class="col-xs-12" style="margin-bottom:5em">
+<div class="col-xs-12" style="margin-bottom:5em; padding:0">
     <div class="col-sm-8 col-sm-offset-2" style="padding:0">
       	<!--BULK MAILER VIEW-->
       	<!--BULK MAILER VIEW-->
@@ -51,30 +51,74 @@
                   <i>
                       <span style="margin-bottom:1em;display:inline-block">Note:when submitting a .txt file, user details should be in the format per line</span>
                       <br>
-                      <code>firstname,lastname,email,role</code>
+                      <code>firstname,lastname,email,role</code> <button class="btn btn-sm btn-primary" ng-click="showIns()">
+                        <span ng-if="!instructions"> More instructions</span>
+                        <span ng-if="instructions"> Hide instructions</span>
+                      </button>
                       <br>
                       <br>
-                      <a href="/img/test.csv" style="dispaly:inline-block; margin-top:1em">Here's a sample .CSV file for more clarity</a>
-                   </i>
+                      <div class="col-xs-12" style="background-color:#FFF; border:1px solid #ccc; min-height:10em; margin-bottom:1em;padding:1em" ng-show="instructions">
+                           <p style="font-style:normal">
+                                On your spread sheet the column for "roles" specifies what kind of certificates should be sent to
+                                the individual whose detail is on that row <br><br>
+                                For example :
+                                To send a Digital 101 online certificate to a user, that users row should look like this. <br><br>
+                                <code>Merron | Jones | merronjones@gmail.com | Digital101-Online </code>
+                                <br><br>
+                                The following are a list of all available roles: <br><br>
+                                <ul>
+                                    <li>
+                                        <code>Trainer-ZA</code>
+                                    </li><br>
+                                    <li>
+                                        <code>Trainer-AfricaWide</code>
+                                    </li><br>
+                                    <li>
+                                        <code>Strategy101-ZA</code>
+                                    </li><br>
+                                    <li>
+                                        <code>Strategy101-Online</code>
+                                    </li><br>
+                                    <li>
+                                        <code>Strategy101-AfricaWide</code>
+                                    </li><br>
+                                    <li>
+                                        <code>Digital101-Online</code>
+                                    </li><br>
+                                    <li>
+                                        <code>Digital101-ZA</code>
+                                    </li><br>
+                                    <li>
+                                        <code>Digital101-AfricaWide</code>
+                                    </li><br>
+                                    <li>
+                                        <code>DigitalStrategy101-Online</code>
+                                    </li><br>
+                                    <li>
+                                        <code>DigitalStrategy101-ZA</code>
+                                    </li><br>
+                                    <li>
+                                        <code>DigitalStrategy101-AfricaWide</code>
+                                    </li><br>
+                                </ul>
+                                <br>
+                                <a href="/img/test.csv" style="dispaly:inline-block; margin-top:1em">Here's a sample .CSV file for more clarity</a>
+                           </p>
+                      </div>
+                      </i>
               </h4>
     					<span style="">
     						   <input type="file" ng-model="file.data" file-select="data" file-loaded="myLoaded()" file-error="myError($error)" file-progress="myProgress($total,$loaded)">
     					</span>
+              <br>
+              <div class="alert alert-warning">
+                   NOTE: Any row marked in red after uploading your .CSV file won't be sent.
+              </div>
               <div class="col-xs-12"  ng-show="decodedArr" style="padding:0;border:1px solid #ccc;margin-top:2em">
                   <div class="col-xs-12" style="padding:1em;box-shadow:0 2px 5px #ccc">
                       <h4 >
                           <span>
                                Data: {{decodedArr.length}} , Errors: {{formatError()}}
-                          </span>
-                           <hr>
-                          <span class="" style="border-radius:0; margin-right:1em" >
-                              <button class="btn btn-sm btn-default" ng-disabled="sendingCerts" ng-click="updateConcurrency(-1)">
-                                 <i class="icon fa fa-chevron-left" ></i>
-                              </button>
-                              <span style="padding:0 1em">Send {{concurrency}} once</span>
-                              <button class="btn btn-sm btn-default" ng-disabled="sendingCerts" ng-click="updateConcurrency(1)">
-                                 <i class="icon fa fa-chevron-right" ></i>
-                              </button>
                           </span>
                           <button class="btn btn-sm btn-primary pull-right" style="border-radius:0"
                                  ng-click="sendBulkMails()" ng-disabled="sendingCerts || decodedArr.valid.length<=0">

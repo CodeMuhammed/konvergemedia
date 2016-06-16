@@ -389,6 +389,7 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
       //
       $scope.index = 0;
       $scope.sendBulkMails = function(){
+           $scope.index = 0;
            $scope.sendingCerts = true;
            (function worker(index){
                if(index < $scope.decodedArr.length){
@@ -409,8 +410,9 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
                        );
                        /*$timeout(function(){
                          person.status = 'sent';
+                         $scope.index++;
                          worker(++index);
-                       } , 3000);*/
+                       } , 500);*/
                    }
                    else{
                        //
@@ -426,6 +428,12 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
 
            })(0);
       }
+
+    //
+    $scope.instructions = false;
+    $scope.showIns = function(){
+         $scope.instructions = !$scope.instructions;
+    }
 })
 
 //
