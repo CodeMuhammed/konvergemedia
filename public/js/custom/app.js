@@ -39,11 +39,17 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
     return {
         restrict: 'A',
         require: 'ngModel',
-        link: function (scope, el, attr, ctrl) {
+        link: function (scope, el, attr, ngModel) {
             var fileReader = new $window.FileReader();
+            var fileName;
 
             fileReader.onload = function () {
-                ctrl.$setViewValue(fileReader.result);
+                console.log(fileReader.result);
+                var result = {
+                   fileName:fileName,
+                   data : fileReader.result
+                };
+                ngModel.$setViewValue(result);
 
                 if ('fileLoaded' in attr) {
                     scope.$eval(attr['fileLoaded']);
@@ -65,7 +71,7 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
             var fileType = attr['fileSelect'];
 
             el.bind('change', function (e) {
-                var fileName = e.target.files[0];
+                fileName = e.target.files[0];
 
                 if (fileType === '' || fileType === 'text') {
                     fileReader.readAsText(fileName);
@@ -78,8 +84,9 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
 }])
 
 //
-.factory('Roles' ,function($http , $q){
+.factory('Roles' ,function($http , $q , $timeout){
     var rolesArr = [];
+    var certsArr = [];
 
     function rolesAsync(){
        var promise = $q.defer();
@@ -108,12 +115,80 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
        return rolesArr
     }
 
-    ////
-    return {
-       rolesAsync:rolesAsync,
-       rolesSync:rolesSync
+    //
+    function certsAsync(){
+        var promise = $q.defer();
+
+        if(certsArr.length == 0){
+             $http({
+                method: 'GET',
+                url:'/digifyBytes/templates'
+             })
+             .success(function(data){
+                  certsArr = data;
+                  promise.resolve(certsArr);
+             })
+             .error(function(err){
+                  promise.reject(err);
+             });
+        }
+        else{
+           promise.resolve(certsArr);
+        }
+
+        return promise.promise;
     }
 
+    //
+    function saveCert(template){
+       var promise = $q.defer();
+       console.log(template);
+       //disable temporarily the large image
+       template.img = 'phoney';
+
+       $http({
+           method:'POST',
+           url:'/digifyBytes/templates',
+           data:template
+       })
+       .success(function(data){
+           promise.resolve(data);
+       })
+       .error(function(err){
+           promise.reject(err);
+       });
+
+       return promise.promise;
+    }
+
+    //
+    function deleteCert(_id){
+        console.log(_id);
+        var promise = $q.defer();
+
+        $http({
+            method:'DELETE',
+            url:'/digifyBytes/templates',
+            params:{_id:_id}
+        })
+        .success(function(data){
+            promise.resolve(data);
+        })
+        .error(function(err){
+            promise.reject(err);
+        });
+
+        return promise.promise;
+    }
+
+    //
+    return {
+       rolesAsync:rolesAsync,
+       rolesSync:rolesSync,
+       certsAsync:certsAsync,
+       saveCert:saveCert,
+       deleteCert:deleteCert
+    }
 })
 
 //This capitalizes the initial letter of a word
@@ -445,14 +520,42 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
 })
 
 //
-.controller('dragController'  , function($scope , $timeout, $document){
+.controller('dragController'  , function($scope , $timeout, $document , Roles){
      //Disble scrolling to pin dispaly down
      $document.find('html').css({overflow:'hidden'});
 
      //
-     $scope.certTemplates = [
-          {
-             img : '',
+     $scope.view = 'settings';
+
+     //
+     $scope.toggleView  = function(view){
+         $scope.view = view;
+     }
+
+     //
+     Roles.certsAsync().then(
+         function(certs){
+            console.log(certs);
+            //
+            $scope.certTemplates = certs;
+
+            //
+            $scope.certTemplate = $scope.certTemplates[0];
+         },
+         function(err){
+            console.log(err);
+         }
+     );
+
+     //
+     $scope.activeTemplateClass = function(template){
+         return $scope.certTemplate == template?'btn-primary':'';
+     }
+
+     //
+     $scope.addTemplate = function(){
+          $scope.certTemplates.unshift({
+             imgUrl:'buddy.jpg',
              color:'#000',
              font:{
                 family:'Arial',
@@ -461,46 +564,82 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
                 style:''
              },
              placeholderText:'placeholderText',
-             categoryName:'categoryName-AfricaWide',
-             x:200,
-             y:200
-         },
-         {
-            img : '',
-            color:'#000',
-            font:{
-               family:'Arial',
-               weight:'',
-               size:30,
-               style:''
-            },
-            placeholderText:'placeholderText',
-            categoryName:'categoryName-101',
-            x:200,
-            y:200
-        },
-        {
-           img : '',
-           color:'#000',
-           font:{
-              family:'Arial',
-              weight:'',
-              size:30,
-              style:''
-           },
-           placeholderText:'placeholderText',
-           categoryName:'categoryName-ZA',
-           x:200,
-           y:200
-       }
-    ];
+             categoryName:'NewCategoryName',
+             x:300,
+             y:300
+         });
+         $scope.certTemplate = $scope.certTemplates[0];
+         $scope.view = 'settings';
+     }
 
-    //
-    $scope.certTemplate = $scope.certTemplates[0];
+     //
+     $scope.file = {};
+     $scope.myLoaded = function(){
+          $timeout(function(){
+               //@TODO save the image to dropbox or amazon s3 before updating the returned url in imgUrl.
+               $scope.certTemplate.imgUrl = 'img/'+$scope.file.data.fileName.name;
+               $scope.certTemplate.categoryName = $scope.file.data.fileName.name.substr(0 , $scope.file.data.fileName.name.indexOf('.'));
+          });
+     }
+     $scope.myError = function(err){
+          console.log(err);
+     }
+
+     //
+     $scope.saveTemplate = function(){
+         if(angular.isDefined($scope.certTemplate)){
+           $scope.savingTemplate = true;
+           Roles.saveCert(angular.copy($scope.certTemplate)).then(
+               function(_id){
+                   console.log(_id);
+                   $scope.savingTemplate = false;
+                   $scope.certTemplate._id = _id;
+               },
+               function(err){
+                   console.log(err);
+                   //$scope.savingTemplate = false;
+               }
+           );
+         }
+     }
+
+     //
+     $scope.deleteTemplate = function(){
+       var index = $scope.certTemplates.indexOf($scope.certTemplate);
+
+       if(angular.isDefined($scope.certTemplate._id)){
+         $scope.deletingTemplate = true;
+         Roles.deleteCert($scope.certTemplate._id).then(
+             function(status){
+                 $scope.deletingTemplate = false;
+                 $scope.certTemplates.splice(index , 1);
+                 $scope.certTemplate =  $scope.certTemplates[0];
+             },
+             function(err){
+                 console.log(err);
+                 //$scope.deletingTemplate = false;
+             }
+         );
+       }
+       else{
+          $scope.certTemplates.splice(index , 1);
+          $scope.certTemplate =   $scope.certTemplates[0];
+       }
+
+     }
+
+     //
+     $scope.canDelete = function(){
+          if(angular.isDefined($scope.certTemplate)){
+               return angular.isDefined($scope.certTemplate._id) && $scope.certTemplates.length>0;
+          }
+          return false;
+     }
 
     //
     $scope.changeActiveTemplate = function(template){
         $scope.certTemplate = template;
+        //$scope.view = 'settings';
     }
 
      //
@@ -511,16 +650,6 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
          else if(property == 'weight'){
             $scope.certTemplate.font[property] =  $scope.certTemplate.font[property] == ''? 'bold' : '';
          }
-     }
-
-     $scope.file = {};
-     $scope.myLoaded = function(){
-          $timeout(function(){
-               $scope.certTemplate.img = $scope.file.data;
-          });
-     }
-     $scope.myError = function(err){
-          console.log(err);
      }
 
      //
@@ -550,13 +679,4 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
          $scope.pinX = e.layerX;
          $scope.pinY = e.layerY;
      }
-
-     //
-     $scope.view = 'settings';
-
-     //
-     $scope.toggleView  = function(view){
-         $scope.view = view;
-     }
-
 });

@@ -1,11 +1,13 @@
 var express = require('express');
 var router = express.Router();
 var path = require('path');
+var ObjectId = require('mongodb').ObjectId;
 
 /*This api is responsible for sending certificates to digifyBytes graduates*/
 module.exports = function(emailClient , certClient , dbResource){
 	console.log('Digify Bytes Loaded');
   var DigifyList = dbResource.model('DigifyList');
+	var Templates = dbResource.model('Templates');
 
 	//
 	var roles = [
@@ -137,6 +139,64 @@ module.exports = function(emailClient , certClient , dbResource){
 
 	   });
 
+
+//
+router.route('/templates')
+   //
+   .get(function(req , res){
+		    Templates.find({}).sort({date:-1}).toArray(function(err ,  results){
+					    if(err){
+								  res.status(500).send('Error while connecting to database');
+							}
+							else if(!results[0]){
+								  res.status(200).send([]);
+							}
+							else{
+								  res.status(200).send(results);
+							}
+				});
+	 })
+
+	 //
+	 .post(function(req , res){
+		   console.log(req.body);
+			 var old = false;
+			 if(req.body._id != ''){
+				   old = true;
+				   req.body._id = ObjectId(req.body._id);
+			 }
+
+			 Templates.update({_id:req.body._id} , req.body, {upsert:true} , function(err , stats){
+						if(err){
+							 console.log(err);
+							 res.status(500).send('Err updating Templates');
+						}
+						else{
+							if(old){
+								  res.status(200).send(req.body._id);
+						  }
+							else{
+								 	res.status(200).send(stats.result.upserted[0]._id);
+							}
+						}
+			  });
+	 })
+
+	 //
+	 .delete(function(req , res){
+		  console.log(req.query);
+      Templates.remove({_id:ObjectId(req.query._id)} , function(err , stats){
+					if(err){
+						 console.log(err);
+						 res.status(500).send('Err deleting Templates');
+					}
+					else{
+						  console.log(stats);
+							res.status(200).send('done deleting');
+					}
+			});
+
+	 });
 
 	//This router exposes certain api needed by client
     return router;

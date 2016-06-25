@@ -21,6 +21,7 @@ module.exports = function(dbName , authObj , app){
 					assert.equal(null ,err);
 					console.log('Connected correcctly to the database');
 					openedColls.DigifyList = db.collection('DigifyList');
+					openedColls.Templates = db.collection('Templates');
 					DBOpened = true;
 
 					return cb();
