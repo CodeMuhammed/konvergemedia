@@ -81,7 +81,6 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
 .factory('Roles' ,function($http , $q){
     var rolesArr = [];
 
-
     function rolesAsync(){
        var promise = $q.defer();
 
@@ -258,9 +257,19 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
 //============================ 2 implementation ============================
 .controller('homeController' , function($scope , Auth ,  $timeout , $document){
       //
+     if(Auth.isAuth()){
+       //Enable scrolling
+       $document.find('html').css({overflow:'auto'});
+     }
+     else{
+       //Disble scrolling to pin dispaly down
+       $document.find('html').css({overflow:'hidden'});
+     }
+
       $scope.views = [
-          'bulk mail',
-          'manual mail',
+          'bulk',
+          'manual',
+          'template'
       ];
 
       //
@@ -272,7 +281,6 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
       }
 
      //Controls login and views
-     $document.find('html').css({overflow:'hidden'});
      $scope.isAuth = function(){
          return Auth.isAuth();
      }
@@ -437,21 +445,73 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
 })
 
 //
-.controller('dragController'  , function($scope , $timeout){
-     $scope.mT = 80;
-     $scope.mL = 400;
-     $scope.box = 600;
+.controller('dragController'  , function($scope , $timeout, $document){
+     //Disble scrolling to pin dispaly down
+     $document.find('html').css({overflow:'hidden'});
 
      //
-     $scope.certTemplate = {
-         img : '',
-         color:'#000',
-         size:30,
-         font:'Arial',
-         categoryName:'Recipient\'s Name',
-         x:200,
-         y:200
-     };
+     $scope.certTemplates = [
+          {
+             img : '',
+             color:'#000',
+             font:{
+                family:'Arial',
+                weight:'',
+                size:30,
+                style:''
+             },
+             placeholderText:'placeholderText',
+             categoryName:'categoryName-AfricaWide',
+             x:200,
+             y:200
+         },
+         {
+            img : '',
+            color:'#000',
+            font:{
+               family:'Arial',
+               weight:'',
+               size:30,
+               style:''
+            },
+            placeholderText:'placeholderText',
+            categoryName:'categoryName-101',
+            x:200,
+            y:200
+        },
+        {
+           img : '',
+           color:'#000',
+           font:{
+              family:'Arial',
+              weight:'',
+              size:30,
+              style:''
+           },
+           placeholderText:'placeholderText',
+           categoryName:'categoryName-ZA',
+           x:200,
+           y:200
+       }
+    ];
+
+    //
+    $scope.certTemplate = $scope.certTemplates[0];
+
+    //
+    $scope.changeActiveTemplate = function(template){
+        $scope.certTemplate = template;
+    }
+
+     //
+     $scope.toggleStyle = function(property){
+         if(property == 'style'){
+             $scope.certTemplate.font[property] = $scope.certTemplate.font[property] == ''? 'italic' : '';
+         }
+         else if(property == 'weight'){
+            $scope.certTemplate.font[property] =  $scope.certTemplate.font[property] == ''? 'bold' : '';
+         }
+     }
 
      $scope.file = {};
      $scope.myLoaded = function(){
@@ -464,13 +524,17 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
      }
 
      //
+     $scope.mT = 80;
+     $scope.mL = 400;
+     $scope.boxX = 800;
+     $scope.boxY = 600;
      $scope.recordParent = function(e){
          if($scope.pinned){
             //@TODO set boundaries
             if(e.clientX-$scope.pinX-$scope.mL >= 0
                  && e.clientY-$scope.pinY-$scope.mT >=0
-                   && e.clientX-$scope.mL+(e.target.offsetWidth+(e.target.offsetLeft*2)-$scope.pinX) <=$scope.box
-                     && e.clientY-$scope.mT+(e.target.offsetHeight+(e.target.scrollHeight/2)-$scope.pinY) <=$scope.box){
+                   && e.clientX-$scope.mL+(e.target.offsetWidth+(e.target.offsetLeft*2)-$scope.pinX) <=$scope.boxX
+                     && e.clientY-$scope.mT+(e.target.offsetHeight+(e.target.scrollHeight/2)-$scope.pinY) <=$scope.boxY){
                 $scope.certTemplate.x = e.clientX-$scope.pinX-$scope.mL;
                 $scope.certTemplate.y = e.clientY-$scope.pinY-$scope.mT;
             }
@@ -481,10 +545,18 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
      //
      $scope.pinned = false;
      $scope.recordDown  = function(e){
-         console.log(e.target);
+         console.log(e);
          $scope.pinned = !$scope.pinned;
          $scope.pinX = e.layerX;
          $scope.pinY = e.layerY;
+     }
+
+     //
+     $scope.view = 'settings';
+
+     //
+     $scope.toggleView  = function(view){
+         $scope.view = view;
      }
 
 });

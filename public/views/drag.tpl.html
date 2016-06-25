@@ -1,30 +1,71 @@
 <div class="col-xs-12">
-     <h1>Drag Text to preferred position (project price: NGN 100,000)</h1>
-     <span style="padding:0;display:inline-block; width:{{box}}px; height:{{box}}px;
+     <div class="col-xs-12" style="padding:0">
+         <div class="col-sm-3">
+           <h2 style="margin-bottom:1em">
+             <a class="icon fa fa-arrow-left" href="#!/home" style="font-size:1.3em; margin-right:.4em; text-decoration:none"></a>
+             Home
+           </h2>
+         </div>
+         <div class="col-sm-9">
+           <h2 style="margin-bottom:1em; margin-left:1.5em;">
+               {{certTemplate.categoryName}}
+           </h2>
+         </div>
+     </div>
+
+     <span style="padding:0;display:inline-block; width:{{boxX}}px; height:{{boxY}}px;
         outline:1px dotted #ccc; position:absolute;left:0;top:0; margin-left:{{mL}}px; margin-top:{{mT}}px"
           ng-mousemove="recordParent($event)">
-           <img ng-src="{{certTemplate.img}}" alt="" / style="width:100%; z-index:-1">
+           <img ng-src="{{certTemplate.img}}" alt="" style="width:100%; z-index:-1">
            <span class="btn btn-default" style="border-radius:0; display:inline-block;padding:.3em;
                position:absolute; top:{{certTemplate.y}}px;left:{{certTemplate.x}}px;font-size:1.5em;
                    background-color:rgba(255 , 255 , 255, .1);border:none; box-shadow:none"
                    ng-mousemove="recordChild($event)"
                    ng-click="recordDown($event)">
-                 <span style="font-size:{{certTemplate.size}}px;color:{{certTemplate.color}};font-weight:bold;font-family:{{certTemplate.font}}">{{certTemplate.categoryName}}</span>
+                 <span style="font-size:{{certTemplate.font.size}}px;color:{{certTemplate.color}};font-weight:{{certTemplate.font.weight}};font-style:{{certTemplate.font.style}}; font-family:{{certTemplate.font.family}}">{{certTemplate.placeholderText}}</span>
            </span>
      </span>
      <div class="col-sm-3" style="padding-left:0">
-       <span  style="margin-bottom:1em; display:block">
-            <span style="font-size:1em; font-style:italic; font-weight:bold">Select a certificate template</span>
-            <input type="file" ng-model="file.data" file-select="data" file-loaded="myLoaded()" file-error="myError($error)" file-progress="myProgress($total,$loaded)">
+       <span style="margin-bottom:1em; height:3em; display:block;">
+           <span style="display:block; float:left; text-align:center; padding-top:.6em; height:3em; border:1px solid #ccc;
+                        border-top:{{view=='templates'?'none': '1px solid #ccc'}};
+                        border-bottom:{{view=='settings'?'none': '1px solid #ccc'}}; width:50%"
+                  ng-click="toggleView('settings')"
+                  >Settings</span>
+           <span style="display:block; float:left; text-align:center;  padding-top:.6em; height:3em; border:1px solid #ccc;
+                        border-top:{{view=='settings'?'none': '1px solid #ccc'}};
+                        border-bottom:{{view=='templates'?'none': '1px solid #ccc'}}; width:50%"
+                  ng-click="toggleView('templates')"
+                  >Templates</span>
        </span>
-       <input type="text" class="form-control" placeholder="Enter category name" ng-model="certTemplate.categoryName" style="margin-bottom:1em">
-       <input type="number" class="form-control" placeholder="Adjust font size" ng-model="certTemplate.size"  style="margin-bottom:1em">
-       <input type="text" class="form-control" placeholder="Enter color name or #" ng-model="certTemplate.color"  style="margin-bottom:1em">
-       <input type="text" class="form-control" placeholder="Enter font type here" ng-model="certTemplate.font"  style="margin-bottom:1em">
-       <span style="display:block;">
-           move : x{{certTemplate.x}}, y:{{certTemplate.y}}<br>
-           Pin event : x: {{pinX}}, y: {{pinY}}<br>
-           Mouse Pinned : {{pinned}} <br>
-       </span>
+       <div class="col-xs-12" style="padding:0" ng-show="view == 'settings'">
+           <span  style="margin-bottom:1em; display:block; outline:1px dotted #ccc; margin-top:2em">
+                <span style="font-size:1em; font-style:italic; font-weight:bold">Select a certificate template</span>
+                <input type="file" ng-model="file.data" file-select="data" file-loaded="myLoaded()" file-error="myError($error)" file-progress="myProgress($total,$loaded)">
+           </span>
+           <input type="text" class="form-control" placeholder="Type a placeholder here" ng-model="certTemplate.placeholderText" style="margin-bottom:1em">
+           <input type="text" class="form-control" placeholder="Type category name here" ng-model="certTemplate.categoryName" style="margin-bottom:1em">
+           <input type="number" class="form-control" placeholder="Adjust font size" ng-model="certTemplate.font.size"  style="margin-bottom:1em">
+           <input type="text" class="form-control" placeholder="Enter color name or #" ng-model="certTemplate.color"  style="margin-bottom:1em">
+           <input type="text" class="form-control" placeholder="Enter font type here" ng-model="certTemplate.font.family"  style="margin-bottom:1em">
+           <span style="margin-bottom:1em; display:inline-block">
+                <div class="btn-group">
+                  <button class="btn btn-default {{certTemplate.font.weight==''? '' : 'btn-primary'}}" name="button" ng-click="toggleStyle('weight')" style="outline:none">
+                      <i class="icon fa fa-bold"></i>
+                  </button>
+                  <button class="btn btn-default {{certTemplate.font.style==''? '' : 'btn-primary'}}" name="button"  ng-click="toggleStyle('style')" style="outline:none">
+                      <i class="icon fa fa-italic"></i>
+                  </button>
+                </div>
+           </span>
+           <button class="btn btn-default" ng-disabled="true" name="button">Preview</button>
+           <button class="btn btn-primary" ng-disabled="true" name="button">Save template</button>
+       </div>
+       <div class="col-xs-12" style="padding:0;height:500px; overflow:auto" ng-show="view == 'templates'">
+            <h3 style="">32 certificates <i class="icon fa fa-plus pull-right"></i></h3>
+            <hr>
+            <button type="button" class="btn btn-default btn-block" style="margin-bottom:1em" ng-repeat="template in certTemplates" ng-click="changeActiveTemplate(template)">{{template.categoryName}}</button>
+       </div>
+
      </div>
 </div>
