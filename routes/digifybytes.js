@@ -4,25 +4,25 @@ var path = require('path');
 var ObjectId = require('mongodb').ObjectId;
 
 /*This api is responsible for sending certificates to digifyBytes graduates*/
-module.exports = function(emailClient , certClient , dbResource){
+module.exports = function(emailClient , certClient , dbResource , roles){
 	console.log('Digify Bytes Loaded');
   var DigifyList = dbResource.model('DigifyList');
 	var Templates = dbResource.model('Templates');
 
 	//
-	var roles = [
-	     'Trainer-AfricaWide',
-	     'Trainer-ZA',
-	     'DigitalStrategy101-ZA',
-	     'DigitalStrategy101-AfricaWide',
-	     'DigitalStrategy101-Online',
-	     'Digital101-ZA',
-	     'Digital101-AfricaWide',
-	     'Digital101-Online',
-	     'Strategy101-ZA',
-	     'Strategy101-AfricaWide',
-	     'Strategy101-Online'
-	];
+	function refreshRoles(){
+		Templates.find({} , {_id:0 , categoryName:1}).toArray(function(err , results){
+				 if(err){
+						 throw new Error('Unable to get roles from db here');
+				 }
+				 else{
+						 for(var i=0; i<results.length; i++){
+								 results[i] = results[i].categoryName;
+						 }
+						 roles = results;
+				 }
+		});
+	};
 
 	//
 	function getCert(person, cb){
@@ -159,39 +159,39 @@ router.route('/templates')
 
 	 //
 	 .post(function(req , res){
-		   console.log(req.body);
 			 var old = false;
-			 if(req.body._id != ''){
+			 var query = {nonexistent:'nonexistent'}; // purposely set to look for a document that does not exist
+			 console.log(req.body);
+
+			 if(req.body._id){
 				   old = true;
 				   req.body._id = ObjectId(req.body._id);
+					 query = {_id:req.body._id}
 			 }
 
-			 Templates.update({_id:req.body._id} , req.body, {upsert:true} , function(err , stats){
+
+			 Templates.update(query, req.body, {upsert:true} , function(err , stats){
 						if(err){
 							 console.log(err);
 							 res.status(500).send('Err updating Templates');
 						}
 						else{
-							if(old){
-								  res.status(200).send(req.body._id);
-						  }
-							else{
-								 	res.status(200).send(stats.result.upserted[0]._id);
-							}
+							refreshRoles();
+						  res.status(200).send(old?req.body._id:stats.result.upserted[0]._id);
 						}
 			  });
 	 })
 
 	 //
 	 .delete(function(req , res){
-		  console.log(req.query);
+		  console.log('Delete called');
       Templates.remove({_id:ObjectId(req.query._id)} , function(err , stats){
 					if(err){
 						 console.log(err);
 						 res.status(500).send('Err deleting Templates');
 					}
 					else{
-						  console.log(stats);
+							refreshRoles();
 							res.status(200).send('done deleting');
 					}
 			});

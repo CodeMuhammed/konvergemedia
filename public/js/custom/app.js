@@ -90,23 +90,18 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
 
     function rolesAsync(){
        var promise = $q.defer();
+       $http({
+           method:'GET',
+           url:'/digifyBytes/getRoles'
+       })
+       .success(function(data){
+            rolesArr = data;
+            promise.resolve(rolesArr);
+       })
+       .error(function(err){
+           alert(err);
+       });
 
-       if(rolesArr.length == 0){
-           $http({
-               method:'GET',
-               url:'/digifyBytes/getRoles'
-           })
-           .success(function(data){
-                rolesArr = data;
-                promise.resolve(rolesArr);
-           })
-           .error(function(err){
-               alert(err);
-           });
-       }
-       else{
-          promise.resolve(rolesArr);
-       }
        return promise.promise;
     }
 
@@ -143,8 +138,6 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
     function saveCert(template){
        var promise = $q.defer();
        console.log(template);
-       //disable temporarily the large image
-       template.img = 'phoney';
 
        $http({
            method:'POST',
@@ -162,14 +155,14 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
     }
 
     //
-    function deleteCert(_id){
+    function deleteCert(_id , name){
         console.log(_id);
         var promise = $q.defer();
 
         $http({
             method:'DELETE',
             url:'/digifyBytes/templates',
-            params:{_id:_id}
+            params:{_id:_id , name:name}
         })
         .success(function(data){
             promise.resolve(data);
@@ -520,7 +513,11 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
 })
 
 //
-.controller('dragController'  , function($scope , $timeout, $document , Roles){
+.controller('dragController'  , function($scope  , $state , $timeout, $document , Roles , Auth){
+     //Bounce users who are not yet auth to home
+     if(!Auth.isAuth()){
+         $state.go('home');
+     }
      //Disble scrolling to pin dispaly down
      $document.find('html').css({overflow:'hidden'});
 
@@ -609,7 +606,7 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
 
        if(angular.isDefined($scope.certTemplate._id)){
          $scope.deletingTemplate = true;
-         Roles.deleteCert($scope.certTemplate._id).then(
+         Roles.deleteCert($scope.certTemplate._id , $scope.certTemplate.categoryName).then(
              function(status){
                  $scope.deletingTemplate = false;
                  $scope.certTemplates.splice(index , 1);

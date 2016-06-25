@@ -25,6 +25,9 @@ dbResource.initColls(function(){
 	//Digifybytes Certificate client
 	var certClient = require('./app_server/controllers/certClient')();
 
+	//
+	var Templates  = dbResource.model('Templates');
+
 	//Configure the express app
 	app.set('view cache' , true);
   app.set('views' , 'views');
@@ -46,7 +49,18 @@ dbResource.initColls(function(){
   app.use(express.static(path.join(__dirname , 'public')));
 
 	//Certificate mailer routeEvents
-	app.use('/digifyBytes' , require('./routes/digifybytes')(emailClient , certClient, dbResource));
+	Templates.find({} , {_id:0 , categoryName:1}).toArray(function(err , results){
+		   if(err){
+				   throw new Error('Unable to get roles from db');
+			 }
+			 else{
+				   for(var i=0; i<results.length; i++){
+						   results[i] = results[i].categoryName;
+					 }
+				   app.use('/digifyBytes' , require('./routes/digifybytes')(emailClient , certClient, dbResource , results));
+			 }
+	});
+
 
 	//handle errors using custom or 3rd party middle-wares
 	app.use(errorHandler());

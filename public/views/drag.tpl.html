@@ -62,7 +62,7 @@
            <button class="btn btn-primary" name="button" ng-click="saveTemplate()">
              <i class="icon fa fa-spinner fa-spin" ng-show="savingTemplate"></i>
              <i class="icon fa fa-save" ng-hide="savingTemplate"></i>
-              Save template
+              <span ng-hide="certTemplate._id">Save</span> <span ng-show="certTemplate._id">Update</span> template
            </button>
            <button class="btn btn-danger" name="button" ng-click="deleteTemplate()" ng-disabled="!canDelete()">
               <i class="icon fa fa-trash" ng-hide="deletingTemplate"></i>
