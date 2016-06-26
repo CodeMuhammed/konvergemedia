@@ -34,55 +34,6 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
     }
 ])
 
-//A directive for reading txt files
-.directive('fileSelect', ['$window', function ($window) {
-    return {
-        restrict: 'A',
-        require: 'ngModel',
-        link: function (scope, el, attr, ngModel) {
-            var fileReader = new $window.FileReader();
-            var fileName;
-
-            fileReader.onload = function () {
-                console.log(fileReader.result);
-                var result = {
-                   fileName:fileName,
-                   data : fileReader.result
-                };
-                ngModel.$setViewValue(result);
-
-                if ('fileLoaded' in attr) {
-                    scope.$eval(attr['fileLoaded']);
-                }
-            };
-
-            fileReader.onprogress = function (event) {
-                if ('fileProgress' in attr) {
-                    scope.$eval(attr['fileProgress'], {'$total': event.total, '$loaded': event.loaded});
-                }
-            };
-
-            fileReader.onerror = function () {
-                if ('fileError' in attr) {
-                    scope.$eval(attr['fileError'], {'$error': fileReader.error});
-                }
-            };
-
-            var fileType = attr['fileSelect'];
-
-            el.bind('change', function (e) {
-                fileName = e.target.files[0];
-
-                if (fileType === '' || fileType === 'text') {
-                    fileReader.readAsText(fileName);
-                } else if (fileType === 'data') {
-                    fileReader.readAsDataURL(fileName);
-                }
-            });
-        }
-    };
-}])
-
 //
 .factory('Roles' ,function($http , $q , $timeout){
     var rolesArr = [];
@@ -526,9 +477,6 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
      $scope.view = 'settings';
 
      //
-     $scope.imageUpdated = false;
-
-     //
      $scope.toggleView  = function(view){
          $scope.view = view;
      }
@@ -572,71 +520,40 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
      //
      $scope.selectFromDropBox = function(){
            options = {
-
               // Required. Called when a user selects an item in the Chooser.
               success: function(files) {
-                  alert("Here's the file link: " + files[0].link)
+                  $timeout(function(){
+                      console.log(files[0].link);
+                      $scope.certTemplate.imgUrl = files[0].link;
+                  });
               },
 
               // Optional. Called when the user closes the dialog without selecting a file
               // and does not include any parameters.
               cancel: function() {
-                   alert('Selection cancelled');
+                   console.log('Selection cancelled');
               },
 
-              // Optional. "preview" (default) is a preview link to the document for sharing,
-              // "direct" is an expiring link to download the contents of the file. For more
-              // information about link types, see Link types below.
-              linkType: "preview", // or "direct"
-
-              // Optional. A value of false (default) limits selection to a single file, while
-              // true enables multiple file selection.
+              linkType: "direct", // or "direct"
               multiselect: false, // or true
-
-              // Optional. This is a list of file extensions. If specified, the user will
-              // only be able to select files with these extensions. You may also specify
-              // file types, such as "video" or "images" in the list. For more information,
-              // see File types below. By default, all extensions are allowed.
               extensions: ['.jpg', '.png'],
           };
+
           Dropbox.choose(options);
      };
 
      //
      $scope.saveTemplate = function(){
-          $scope.savingTemplate = true;
-         if($scope.imageUpdated){
-             Roles.uploadImage($scope.file.data).then(
-                 function(imgUrl){
-                     console.log(imgUrl);
-                     delete($scope.certTemplate.img); //so that imgUrl is used instead
-                     $scope.certTemplate.imgUrl = imgUrl; //From dropbox not mocked
-                     saveCert();
-                 },
-                 function(err){
-                     console.log(err);
-                 }
-             );
-         }
-         else{
-            saveCert();
-         }
-
-         //
-         function saveCert(){
-             $scope.savingTemplate = true;
-             if(angular.isDefined($scope.certTemplate)){
-               Roles.saveCert(angular.copy($scope.certTemplate)).then(
-                   function(_id){
-                       $scope.savingTemplate = false;
-                       $scope.certTemplate._id = _id;
-                       $scope.imageUpdated = false;
-                   },
-                   function(err){
-                       console.log(err);
-                   }
-               );
-             }
+         if(angular.isDefined($scope.certTemplate)){
+           Roles.saveCert(angular.copy($scope.certTemplate)).then(
+               function(_id){
+                   $scope.savingTemplate = false;
+                   $scope.certTemplate._id = _id;
+               },
+               function(err){
+                   console.log(err);
+               }
+           );
          }
      };
 
