@@ -177,7 +177,7 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
    //@TODO dropbox related stuff here
    function uploadImage(data){
       var promise = $q.defer();
-
+      
       console.log(data);
       $timeout(function(){
           promise.resolve('img/'+data.fileName.name);
