@@ -174,33 +174,13 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
         return promise.promise;
     }
 
-   //@TODO dropbox related stuff here
-   function uploadImage(data){
-      var promise = $q.defer();
-      console.log(data);
-      $http({
-          method: 'PUT',
-          url: 'https://content.dropboxapi.com/1/files_put/auto/digifybytes/a.jpg?access_token=' + 'gzVI4e4TilAAAAAAAAAAfe7hIK754TD_TvvTYB_oO1RS9p493WQ_tWCJpxYkCEtm',
-          data: data.data
-      }).success(function(data) {
-          console.log(data);
-          console.log('file uploaded successfully');
-      }).error(function(err) {
-           console.log(err);
-      });
-
-      return promise.promise;
-   }
-
-
     //
     return {
        rolesAsync:rolesAsync,
        rolesSync:rolesSync,
        certsAsync:certsAsync,
        saveCert:saveCert,
-       deleteCert:deleteCert,
-       uploadImage:uploadImage
+       deleteCert:deleteCert
     }
 })
 
@@ -590,17 +570,37 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
      }
 
      //
-     $scope.file = {};
-     $scope.myLoaded = function(){
-          $timeout(function(){
-               $scope.imageUpdated = true;
-               $scope.certTemplate.img = $scope.file.data.data; //Temporary view before uplaoding to dropbox
-               $scope.certTemplate.categoryName = $scope.file.data.fileName.name.substr(0 , $scope.file.data.fileName.name.indexOf('.'));
-          });
-     }
-     $scope.myError = function(err){
-          console.log(err);
-     }
+     $scope.selectFromDropBox = function(){
+           options = {
+
+              // Required. Called when a user selects an item in the Chooser.
+              success: function(files) {
+                  alert("Here's the file link: " + files[0].link)
+              },
+
+              // Optional. Called when the user closes the dialog without selecting a file
+              // and does not include any parameters.
+              cancel: function() {
+                   alert('Selection cancelled');
+              },
+
+              // Optional. "preview" (default) is a preview link to the document for sharing,
+              // "direct" is an expiring link to download the contents of the file. For more
+              // information about link types, see Link types below.
+              linkType: "preview", // or "direct"
+
+              // Optional. A value of false (default) limits selection to a single file, while
+              // true enables multiple file selection.
+              multiselect: false, // or true
+
+              // Optional. This is a list of file extensions. If specified, the user will
+              // only be able to select files with these extensions. You may also specify
+              // file types, such as "video" or "images" in the list. For more information,
+              // see File types below. By default, all extensions are allowed.
+              extensions: ['.jpg', '.png'],
+          };
+          Dropbox.choose(options);
+     };
 
      //
      $scope.saveTemplate = function(){
