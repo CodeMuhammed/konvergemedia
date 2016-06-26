@@ -605,7 +605,16 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
 
     //
     $scope.changeActiveTemplate = function(template){
+        //Force browser to reload image on time by giving it a phoney then giving it a real image after a sec
+
         $scope.certTemplate = template;
+        var img = $scope.certTemplate.imgUrl;
+        $scope.certTemplate.imgUrl = 'img/phooney.jpg';
+
+        $timeout(function(){
+             $scope.certTemplate.imgUrl = img;
+        } , 1500);
+
         //$scope.view = 'settings';
     }
 
