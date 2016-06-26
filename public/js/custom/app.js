@@ -523,8 +523,12 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
               // Required. Called when a user selects an item in the Chooser.
               success: function(files) {
                   $timeout(function(){
+                      console.log(files[0]);
                       console.log(files[0].link);
                       $scope.certTemplate.imgUrl = files[0].link;
+
+                      //inferr category name from file name
+                      //$scope.certTemplate.categoryName =
                   });
               },
 
@@ -544,6 +548,7 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
 
      //
      $scope.saveTemplate = function(){
+         $scope.savingTemplate = true;
          if(angular.isDefined($scope.certTemplate)){
            Roles.saveCert(angular.copy($scope.certTemplate)).then(
                function(_id){
