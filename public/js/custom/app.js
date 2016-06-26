@@ -537,7 +537,7 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
                    console.log('Selection cancelled');
               },
 
-              linkType: "direct", // or "direct"
+              linkType: "preview", // or "direct"
               multiselect: false, // or true
               extensions: ['.jpg', '.png'],
           };
