@@ -610,12 +610,11 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
         $scope.certTemplate = template;
         var img = $scope.certTemplate.imgUrl;
         $scope.certTemplate.imgUrl = 'img/phooney.jpg';
-
+        console.log($scope.certTemplate);
         $timeout(function(){
              $scope.certTemplate.imgUrl = img;
+             console.log($scope.certTemplate);
         } , 1500);
-
-        //$scope.view = 'settings';
     }
 
      //
