@@ -4,11 +4,19 @@
        <title>Custom Digify Certificate</title>
    </head>
    <body style="background-color:#EEF3FA">
-      <img src="<%=certUrl%>" alt="" style="width:100%;height:1000px;position:absolute;z-index:-1"/>
+      <img src="<%=imgUrl%>" alt="" style="width:100%;height:1000px;position:absolute;z-index:-1"/>
       <div style="width:100%;height:1000px;text-align:center" class="cert">
-           <div style="min-width:50%;margin-top:<%=position%>px; padding:1em;z-index:1000000000;
-              text-align:center;display:inline-block;font-family:sans-serif;font-face:Arial">
-                <i style="font-size:<%=fontSize%>; color:<%=color%>"><b><%=firstname%> <%=lastname%></b></i>
+           <div style="text-align:center; display:inline-block;min-width:50%;margin-top:<%=y*1.78%>px;
+             padding:1em;z-index:1000000000; display:inline-block;">
+                <i style="
+                  color:<%=color%>;
+                  font-family:sans-serif;
+                  font-face:<%=font.face%>;
+                  font-size:<%=font.size*1.78%>px;
+                  font-weight:<%=font.weight%>;
+                  font-style:<%=font.style%>;">
+                  <%=firstname%> <%=lastname%>
+                </i>
            </div>
       </div>
    </body>

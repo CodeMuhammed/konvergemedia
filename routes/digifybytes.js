@@ -89,8 +89,6 @@ module.exports = function(emailClient , certClient , dbResource , roles){
 											 }
 											 else{
 													 //Save user to database
-													 //@TODO create a new sandbox for email list on mongolab
-													 //@params dbName , connectionString
 													 DigifyList.update({email:person.email} , person , {upsert:true} , function(err , stats){
 														    if(err){
 																	  console.log('There was an error saving data');
@@ -114,31 +112,30 @@ module.exports = function(emailClient , certClient , dbResource , roles){
 	//
 	router.route('/viewCert') //add authentication rules
 	  .get(function(req , res){
-			   if(req.query.auth){
-					    console.log(req.query.role);
-							//init query object to default or with values from query string parameters
-							var baseUrl = process.env.NODE_ENV == 'production'? 'http://digifyBytes.herokuapp.com/' : 'http://localhost:4000/';
+			   if(req.query.auth && req.query.role){
+							Templates.findOne({categoryName:req.query.role} , function(err , result){
+								   if(err){
+										   res.status(400).send('Cannot view certificate db error');
+									 }
+									 else{
+										  console.log(result);
+										  //baseUrl for test before dropbox is inited
+											var baseUrl = process.env.NODE_ENV == 'production'? 'http://digifyBytes.herokuapp.com/' : 'http://localhost:4000/';
 
-							//Information to be bound to views
-							var index = req.query.role && roles.indexOf(req.query.role)>=0 ? roles.indexOf(req.query.role) : 0;
-							var data = {
-								  firstname : req.query.firstname || 'JULIAN',
-									lastname : req.query.lastname || 'MAYS',
-									certUrl : baseUrl+'img/'+roles[index]+'.jpg',
-									position : index<=1? '415' : '340',
-								  color: index<=1? '#BC5192':'#B635F0',
-									fontSize:index<=1? '2.5em' : '3.5em',
-							};
+											//extend result to reflect firstnme lastname
+											result.firstname = req.query.firstname || 'JULIAN';
+											result.lastname = req.query.lastname || 'MAYS';
+                      result.imgUrl = baseUrl+result.imgUrl;
 
-							//render results
-							res.render('digifycert.ejs' , data);
+											//render result
+											res.render('digifycert.ejs' , result);
+									 }
+							});
 				 }
 				 else{
 					   res.status(400).send('Cannot view certificate not admin');
 				 }
-
 	   });
-
 
 //
 router.route('/templates')

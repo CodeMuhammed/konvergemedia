@@ -16,13 +16,16 @@
      <span style="padding:0;display:inline-block; width:{{boxX}}px; height:{{boxY}}px;
         outline:1px dotted #ccc; position:absolute;left:0;top:0; margin-left:{{mL}}px; margin-top:{{mT}}px"
           ng-mousemove="recordParent($event)">
-           <img ng-src="{{certTemplate.imgUrl}}" alt="" style="width:100%; z-index:-1">
+           <img ng-src="{{certTemplate.img ? certTemplate.img : certTemplate.imgUrl}}" alt="" style="width:100%; z-index:-1">
            <span class="btn btn-default" style="border-radius:0; display:inline-block;padding:.3em;
                position:absolute; top:{{certTemplate.y}}px;left:{{certTemplate.x}}px;font-size:1.5em;
                    background-color:rgba(255 , 255 , 255, .1);border:none; box-shadow:none"
                    ng-mousemove="recordChild($event)"
                    ng-click="recordDown($event)">
-                 <span style="font-size:{{certTemplate.font.size}}px;color:{{certTemplate.color}};font-weight:{{certTemplate.font.weight}};font-style:{{certTemplate.font.style}}; font-family:{{certTemplate.font.family}}">{{certTemplate.placeholderText}}</span>
+                 <span style="font-size:{{certTemplate.font.size}}px;color:{{certTemplate.color}};font-weight:{{certTemplate.font.weight}};
+                           font-style:{{certTemplate.font.style}}; font-face:{{certTemplate.font.face}}; font-family:sans-serif;">
+                           {{certTemplate.placeholderText}}
+                 </span>
            </span>
      </span>
      <div class="col-sm-3" style="padding-left:0">
@@ -38,6 +41,8 @@
                   ng-click="toggleView('templates')"
                   >Templates</span>
        </span>
+
+       <!--FORM STARTS HERE-->
        <div class="col-xs-12" style="padding:0" ng-show="view == 'settings'">
            <span  style="margin-bottom:1em; display:block; outline:1px dotted #ccc; margin-top:2em">
                 <span style="font-size:1em; font-style:italic; font-weight:bold">Select a certificate template</span>
@@ -47,18 +52,21 @@
            <input type="text" class="form-control" placeholder="Type category name here" ng-disabled="true" ng-model="certTemplate.categoryName" style="margin-bottom:1em">
            <input type="number" class="form-control" placeholder="Adjust font size" ng-model="certTemplate.font.size"  style="margin-bottom:1em">
            <input type="text" class="form-control" placeholder="Enter color name or #" ng-model="certTemplate.color"  style="margin-bottom:1em">
-           <input type="text" class="form-control" placeholder="Enter font type here" ng-model="certTemplate.font.family"  style="margin-bottom:1em">
+           <input type="text" class="form-control" placeholder="Enter font type here" ng-model="certTemplate.font.face"  style="margin-bottom:1em">
            <span style="margin-bottom:1em; display:inline-block">
                 <div class="btn-group">
-                  <button class="btn btn-default {{certTemplate.font.weight==''? '' : 'btn-info'}}" name="button" ng-click="toggleStyle('weight')" style="outline:none">
+                  <button class="btn btn-default {{certTemplate.font.weight=='normal'? '' : 'btn-info'}}" name="button" ng-click="toggleStyle('weight')" style="outline:none">
                       <i class="icon fa fa-bold"></i>
                   </button>
-                  <button class="btn btn-default {{certTemplate.font.style==''? '' : 'btn-info'}}" name="button"  ng-click="toggleStyle('style')" style="outline:none">
+                  <button class="btn btn-default {{certTemplate.font.style=='normal'? '' : 'btn-info'}}" name="button"  ng-click="toggleStyle('style')" style="outline:none">
                       <i class="icon fa fa-italic"></i>
                   </button>
                 </div>
            </span><br>
-           <button class="btn btn-default" ng-disabled="true" name="button">Preview</button>
+           <a class="btn btn-default" href="/digifyBytes/viewCert?auth=true&role={{certTemplate.categoryName}}"
+              ng-disabled="!canPreview()" target="_blank">
+             Preview
+           </a>
            <button class="btn btn-primary" name="button" ng-click="saveTemplate()">
              <i class="icon fa fa-spinner fa-spin" ng-show="savingTemplate"></i>
              <i class="icon fa fa-save" ng-hide="savingTemplate"></i>
@@ -72,7 +80,7 @@
        </div>
 
 
-       <div class="col-xs-12" ng-show="view == 'templates'">
+       <div class="col-xs-12" style="padding:0" ng-show="view == 'templates'">
            <div class="col-xs-12" style="padding:0; margin-bottom:1.5em">
                <h3 style="">{{certTemplates.length}} Templates
                  <button class="btn btn-sm btn-default pull-right" ng-click="addTemplate()">

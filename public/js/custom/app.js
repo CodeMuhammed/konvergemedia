@@ -174,13 +174,26 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
         return promise.promise;
     }
 
+   //@TODO dropbox related stuff here
+   function uploadImage(data){
+      var promise = $q.defer();
+
+      console.log(data);
+      $timeout(function(){
+          promise.resolve('img/'+data.fileName.name);
+      } , 3000);
+      return promise.promise;
+   }
+
+
     //
     return {
        rolesAsync:rolesAsync,
        rolesSync:rolesSync,
        certsAsync:certsAsync,
        saveCert:saveCert,
-       deleteCert:deleteCert
+       deleteCert:deleteCert,
+       uploadImage:uploadImage
     }
 })
 
@@ -515,14 +528,18 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
 //
 .controller('dragController'  , function($scope  , $state , $timeout, $document , Roles , Auth){
      //Bounce users who are not yet auth to home
-     if(!Auth.isAuth()){
+     /*if(!Auth.isAuth()){
          $state.go('home');
-     }
+     }*/
+
      //Disble scrolling to pin dispaly down
      $document.find('html').css({overflow:'hidden'});
 
      //
      $scope.view = 'settings';
+
+     //
+     $scope.imageUpdated = false;
 
      //
      $scope.toggleView  = function(view){
@@ -532,11 +549,7 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
      //
      Roles.certsAsync().then(
          function(certs){
-            console.log(certs);
-            //
             $scope.certTemplates = certs;
-
-            //
             $scope.certTemplate = $scope.certTemplates[0];
          },
          function(err){
@@ -555,10 +568,10 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
              imgUrl:'buddy.jpg',
              color:'#000',
              font:{
-                family:'Arial',
-                weight:'',
+                face:'Arial',
+                weight:'normal',
                 size:30,
-                style:''
+                style:'normal'
              },
              placeholderText:'placeholderText',
              categoryName:'NewCategoryName',
@@ -573,8 +586,8 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
      $scope.file = {};
      $scope.myLoaded = function(){
           $timeout(function(){
-               //@TODO save the image to dropbox or amazon s3 before updating the returned url in imgUrl.
-               $scope.certTemplate.imgUrl = 'img/'+$scope.file.data.fileName.name;
+               $scope.imageUpdated = true;
+               $scope.certTemplate.img = $scope.file.data.data; //Temporary view before uplaoding to dropbox
                $scope.certTemplate.categoryName = $scope.file.data.fileName.name.substr(0 , $scope.file.data.fileName.name.indexOf('.'));
           });
      }
@@ -584,21 +597,41 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
 
      //
      $scope.saveTemplate = function(){
-         if(angular.isDefined($scope.certTemplate)){
-           $scope.savingTemplate = true;
-           Roles.saveCert(angular.copy($scope.certTemplate)).then(
-               function(_id){
-                   console.log(_id);
-                   $scope.savingTemplate = false;
-                   $scope.certTemplate._id = _id;
-               },
-               function(err){
-                   console.log(err);
-                   //$scope.savingTemplate = false;
-               }
-           );
+          $scope.savingTemplate = true;
+         if($scope.imageUpdated){
+             Roles.uploadImage($scope.file.data).then(
+                 function(imgUrl){
+                     console.log(imgUrl);
+                     delete($scope.certTemplate.img); //so that imgUrl is used instead
+                     $scope.certTemplate.imgUrl = imgUrl; //From dropbox not mocked
+                     saveCert();
+                 },
+                 function(err){
+                     console.log(err);
+                 }
+             );
          }
-     }
+         else{
+            saveCert();
+         }
+
+         //
+         function saveCert(){
+             $scope.savingTemplate = true;
+             if(angular.isDefined($scope.certTemplate)){
+               Roles.saveCert(angular.copy($scope.certTemplate)).then(
+                   function(_id){
+                       $scope.savingTemplate = false;
+                       $scope.certTemplate._id = _id;
+                       $scope.imageUpdated = false;
+                   },
+                   function(err){
+                       console.log(err);
+                   }
+               );
+             }
+         }
+     };
 
      //
      $scope.deleteTemplate = function(){
@@ -633,6 +666,14 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
           return false;
      }
 
+     //
+     $scope.canPreview = function(){
+         if(angular.isDefined($scope.certTemplate)){
+              return angular.isDefined($scope.certTemplate._id) && $scope.certTemplates.length>0;
+         }
+         return false;
+     }
+
     //
     $scope.changeActiveTemplate = function(template){
         $scope.certTemplate = template;
@@ -642,10 +683,10 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
      //
      $scope.toggleStyle = function(property){
          if(property == 'style'){
-             $scope.certTemplate.font[property] = $scope.certTemplate.font[property] == ''? 'italic' : '';
+             $scope.certTemplate.font[property] = $scope.certTemplate.font[property] == 'normal'? 'italic' : 'normal';
          }
          else if(property == 'weight'){
-            $scope.certTemplate.font[property] =  $scope.certTemplate.font[property] == ''? 'bold' : '';
+            $scope.certTemplate.font[property] =  $scope.certTemplate.font[property] == 'normal'? 'bold' : 'normal';
          }
      }
 
@@ -656,7 +697,6 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
      $scope.boxY = 600;
      $scope.recordParent = function(e){
          if($scope.pinned){
-            //@TODO set boundaries
             if(e.clientX-$scope.pinX-$scope.mL >= 0
                  && e.clientY-$scope.pinY-$scope.mT >=0
                    && e.clientX-$scope.mL+(e.target.offsetWidth+(e.target.offsetLeft*2)-$scope.pinX) <=$scope.boxX
