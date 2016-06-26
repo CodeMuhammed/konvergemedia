@@ -119,13 +119,10 @@ module.exports = function(emailClient , certClient , dbResource , roles){
 									 }
 									 else{
 										  console.log(result);
-										  //baseUrl for test before dropbox is inited
-											var baseUrl = process.env.NODE_ENV == 'production'? 'http://digifyBytes.herokuapp.com/' : 'http://localhost:4000/';
 
 											//extend result to reflect firstnme lastname
 											result.firstname = req.query.firstname || 'JULIAN';
 											result.lastname = req.query.lastname || 'MAYS';
-                      result.imgUrl = baseUrl+result.imgUrl;
 
 											//render result
 											res.render('digifycert.ejs' , result);

@@ -523,12 +523,11 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
               // Required. Called when a user selects an item in the Chooser.
               success: function(files) {
                   $timeout(function(){
-                      console.log(files[0]);
                       console.log(files[0].link);
                       $scope.certTemplate.imgUrl = files[0].link;
 
                       //inferr category name from file name
-                      //$scope.certTemplate.categoryName =
+                      $scope.certTemplate.categoryName = files[0].name.substr(0 , files[0].name.indexOf('.'));
                   });
               },
 
