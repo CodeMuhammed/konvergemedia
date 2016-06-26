@@ -177,11 +177,18 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
    //@TODO dropbox related stuff here
    function uploadImage(data){
       var promise = $q.defer();
-      
       console.log(data);
-      $timeout(function(){
-          promise.resolve('img/'+data.fileName.name);
-      } , 3000);
+      $http({
+          method: 'PUT',
+          url: 'https://content.dropboxapi.com/1/files_put/auto/digifybytes/a.jpg?access_token=' + 'gzVI4e4TilAAAAAAAAAAfe7hIK754TD_TvvTYB_oO1RS9p493WQ_tWCJpxYkCEtm',
+          data: data.data
+      }).success(function(data) {
+          console.log(data);
+          console.log('file uploaded successfully');
+      }).error(function(err) {
+           console.log(err);
+      });
+
       return promise.promise;
    }
 
