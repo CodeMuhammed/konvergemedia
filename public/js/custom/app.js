@@ -466,9 +466,9 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
 //
 .controller('dragController'  , function($scope  , $state , $timeout, $document , Roles , Auth){
      //Bounce users who are not yet auth to home
-     /*if(!Auth.isAuth()){
+     if(!Auth.isAuth()){
          $state.go('home');
-     }*/
+     }
 
      //Disble scrolling to pin dispaly down
      $document.find('html').css({overflow:'hidden'});
