@@ -34,6 +34,32 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
     }
 ])
 
+//custom directive to detect when an image is done loading
+.directive('imageloadnotifier', function($timeout) {
+       return {
+           restrict: 'A',
+           scope:false,
+           link: function(scope, element, attrs) {
+               console.log(element);
+               element.bind('load', function() {
+                  $timeout(function(){
+                      scope.imageLoadStatus({type:'load'});
+                  });
+               });
+               element.bind('progress', function() {
+                  $timeout(function(){
+                      alert('here');
+                  });
+               });
+               element.bind('error', function(){
+                   $timeout(function(){
+                       scope.imageLoadStatus({type:'error'});
+                   });
+               });
+           }
+       };
+})
+
 //
 .factory('Roles' ,function($http , $q , $timeout){
     var rolesArr = [];
@@ -466,9 +492,9 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
 //
 .controller('dragController'  , function($scope  , $state , $timeout, $document , Roles , Auth){
      //Bounce users who are not yet auth to home
-     if(!Auth.isAuth()){
+     /*if(!Auth.isAuth()){
          $state.go('home');
-     }
+     }*/
 
      //Disble scrolling to pin dispaly down
      $document.find('html').css({overflow:'hidden'});
@@ -479,6 +505,28 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
      //
      $scope.toggleView  = function(view){
          $scope.view = view;
+     }
+
+     //Listens for when the image loading status changes..
+     $scope.imageLoading = {
+         msg:'',
+         status:false,
+         statusType:''
+     };
+     $scope.imageLoadStatus = function(stats){
+          $scope.imageLoading.statusType = stats.type;
+          switch (stats.type) {
+            case 'load':{
+               $scope.imageLoading.status = false;
+               break;
+            };
+
+            case 'error':{
+               console.log(stats);
+               $scope.imageLoading.status = true;
+               break;
+            };
+          }
      }
 
      //
@@ -605,8 +653,20 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
 
     //
     $scope.changeActiveTemplate = function(template){
-        $scope.certTemplate = template;
-        console.log($scope.certTemplate);
+        if(template){
+          $scope.certTemplate = template;
+          console.log($scope.certTemplate);
+        }
+        else{
+           $scope.imageLoading.status = false;
+           //Temporarily load a different template from this outline
+           var temp = $scope.certTemplate;
+           $scope.certTemplate = '';
+           $timeout(function(){
+               $scope.certTemplate = temp;
+           } , 100);
+           $scope.certTemplate
+        }
     }
 
      //
@@ -620,8 +680,8 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
      }
 
      //
-     $scope.mT = 80;
-     $scope.mL = 400;
+     $scope.mT = 80; //margin-top
+     $scope.mL = 400; //margin-left
      $scope.boxX = 800;
      $scope.boxY = 600;
      $scope.recordParent = function(e){
