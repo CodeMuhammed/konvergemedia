@@ -525,7 +525,7 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
                   $timeout(function(){
                       console.log(files[0].link);
                       $scope.certTemplate.imgUrl = files[0].link.substr(0 , files[0].link.indexOf('?')).replace('www.dropbox' , 'dl.dropboxusercontent');
-                      console.log($scope.certTemplate.imgUrl);
+                      console.log($scope.certTemplate.imgUrl);//
 
                       //inferr category name from file name
                       $scope.certTemplate.categoryName = files[0].name.substr(0 , files[0].name.indexOf('.'));
