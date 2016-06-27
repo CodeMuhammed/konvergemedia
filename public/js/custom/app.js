@@ -524,7 +524,7 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
               success: function(files) {
                   $timeout(function(){
                       console.log(files[0].link);
-                      $scope.certTemplate.imgUrl = files[0].link.substr(0 , files[0].link.indexOf('?'))+'?raw=1';
+                      $scope.certTemplate.imgUrl = files[0].link.substr(0 , files[0].link.indexOf('?')).replace('www.dropbox' , 'dl.dropboxusercontent');
                       console.log($scope.certTemplate.imgUrl);
 
                       //inferr category name from file name
@@ -605,13 +605,7 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
 
     //
     $scope.changeActiveTemplate = function(template){
-        //Force browser to reload image on time by giving it a phoney then giving it a real image after a sec
-
         $scope.certTemplate = template;
-        var img = $scope.certTemplate.imgUrl;
-        $scope.certTemplate.imgUrl = 'img/phooney.jpg';
-        console.log($scope.certTemplate);
-        $scope.certTemplate.imgUrl = img;
         console.log($scope.certTemplate);
     }
 
