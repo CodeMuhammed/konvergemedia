@@ -60,6 +60,55 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
        };
 })
 
+//A directive for reading txt files
+.directive('fileSelect', ['$window', function ($window) {
+    return {
+        restrict: 'A',
+        require: 'ngModel',
+        link: function (scope, el, attr, ngModel) {
+            var fileReader = new $window.FileReader();
+            var fileName;
+
+            fileReader.onload = function () {
+                console.log(fileReader.result);
+                var result = {
+                   fileName:fileName,
+                   data : fileReader.result
+                };
+                ngModel.$setViewValue(result);
+
+                if ('fileLoaded' in attr) {
+                    scope.$eval(attr['fileLoaded']);
+                }
+            };
+
+            fileReader.onprogress = function (event) {
+                if ('fileProgress' in attr) {
+                    scope.$eval(attr['fileProgress'], {'$total': event.total, '$loaded': event.loaded});
+                }
+            };
+
+            fileReader.onerror = function () {
+                if ('fileError' in attr) {
+                    scope.$eval(attr['fileError'], {'$error': fileReader.error});
+                }
+            };
+
+            var fileType = attr['fileSelect'];
+
+            el.bind('change', function (e) {
+                fileName = e.target.files[0];
+
+                if (fileType === '' || fileType === 'text') {
+                    fileReader.readAsText(fileName);
+                } else if (fileType === 'data') {
+                    fileReader.readAsDataURL(fileName);
+                }
+            });
+        }
+    };
+}])
+
 //
 .factory('Roles' ,function($http , $q , $timeout){
     var rolesArr = [];
@@ -317,6 +366,8 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
           'template'
       ];
 
+
+
       //
       $scope.active = $scope.views[0];
 
@@ -394,9 +445,9 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
       $scope.file = {};
       $scope.myLoaded = function(){
            $timeout(function(){
-             $scope.file.data = $scope.file.data.substr($scope.file.data.indexOf(',')+1);
+             $scope.file.data.data = $scope.file.data.data.substr($scope.file.data.data.indexOf(',')+1);
              //use custom filer to format data
-             Papa.parse($window.atob($scope.file.data) , {
+             Papa.parse($window.atob($scope.file.data.data) , {
                complete: function(result){
                    $timeout(function(){
                        $scope.decodedArr = $filter('mailFormatter')(result.data);
@@ -484,6 +535,8 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
 
     //
     $scope.instructions = false;
+    //
+    $scope.showOutAlert = true;
     $scope.showIns = function(){
          $scope.instructions = !$scope.instructions;
     }

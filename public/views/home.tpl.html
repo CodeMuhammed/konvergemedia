@@ -60,6 +60,7 @@
                       <br>
                       <br>
                       <div class="col-xs-12" style="background-color:#FFF; border:1px solid #ccc; min-height:10em; margin-bottom:1em;padding:1em" ng-show="instructions">
+                           <h2>BUlk Mailer Instruction</h2>
                            <p style="font-style:normal">
                                 On your spread sheet the column for "roles" specifies what kind of certificates should be sent to
                                 the individual whose detail is on that row <br><br>
@@ -68,43 +69,25 @@
                                 <code>Merron | Jones | merronjones@gmail.com | Digital101-Online </code>
                                 <br><br>
                                 The following are a list of all available roles: <br><br>
-                                <ul>
-                                    <li>
-                                        <code>Trainer-ZA</code>
-                                    </li><br>
-                                    <li>
-                                        <code>Trainer-AfricaWide</code>
-                                    </li><br>
-                                    <li>
-                                        <code>Strategy101-ZA</code>
-                                    </li><br>
-                                    <li>
-                                        <code>Strategy101-Online</code>
-                                    </li><br>
-                                    <li>
-                                        <code>Strategy101-AfricaWide</code>
-                                    </li><br>
-                                    <li>
-                                        <code>Digital101-Online</code>
-                                    </li><br>
-                                    <li>
-                                        <code>Digital101-ZA</code>
-                                    </li><br>
-                                    <li>
-                                        <code>Digital101-AfricaWide</code>
-                                    </li><br>
-                                    <li>
-                                        <code>DigitalStrategy101-Online</code>
-                                    </li><br>
-                                    <li>
-                                        <code>DigitalStrategy101-ZA</code>
-                                    </li><br>
-                                    <li>
-                                        <code>DigitalStrategy101-AfricaWide</code>
-                                    </li><br>
-                                </ul>
                                 <br>
                                 <a href="/img/test.csv" style="dispaly:inline-block; margin-top:1em">Here's a sample .CSV file for more clarity</a>
+                           </p>
+                           <br>
+                           <p style="font-style:normal">
+                               <h2>Template Generator Instruction</h2>
+                               <p>
+                                 <p>
+                                      The roles column of the CSV file indicates the template to be used when sending a certificate to a participant. To create a certificate template, do the following
+                                      <ul>
+                                          <li>here</li>
+                                          <li>here</li>
+                                          <li>here</li>
+                                          <li>here</li>
+                                          <li>here</li>
+                                          <li>here</li>
+                                      </ul>
+                                 </p>
+                               </p>
                            </p>
                       </div>
                       </i>
@@ -113,8 +96,13 @@
     						   <input type="file" ng-model="file.data" file-select="data" file-loaded="myLoaded()" file-error="myError($error)" file-progress="myProgress($total,$loaded)">
     					</span>
               <br>
-              <div class="alert alert-warning">
-                   NOTE: Any row marked in red after uploading your .CSV file won't be sent.
+              <div class="alert alert-danger" ng-show="showOutAlert">
+                    <i style="font-size:1.4em; position:absolute; right:1em" class="icon fa fa-times" ng-click="showOutAlert=!showOutAlert"></i>
+                   <h1>NOTE: Templates Deleted</h1>
+                   <p>
+                       All static templates were removed which means you will see alot of errors in the uploaded CSV file as those roles are no longer available.
+                       Please use the template generator to create your templates and define roles.
+                   </p>
               </div>
               <div class="col-xs-12"  ng-show="decodedArr" style="padding:0;border:1px solid #ccc;margin-top:2em">
                   <div class="col-xs-12" style="padding:1em;box-shadow:0 2px 5px #ccc">
