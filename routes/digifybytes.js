@@ -63,7 +63,7 @@ module.exports = function(emailClient , certClient , dbResource , roles){
 					    res.status(200).send('Successfully authenticated admin');
 				 }
 				 else{
-					   res.status(500).send('Failed authenticate admin');
+					   res.status(500).send('Failed to authenticate admin');
 				 }
 		 });
 
