@@ -47,7 +47,7 @@
       	<!--BULK MAILER VIEW-->
       	<!--BULK MAILER VIEW-->
     		 <div class="col-xs-12" ng-show="active == 'bulk'" ng-controller="bulkMailerController" style="padding:0;">
-
+             
               <h2>Upload a .txt or .csv file containing user details</h2>
               <h4>
                   <i>
@@ -96,14 +96,7 @@
     						   <input type="file" ng-model="file.data" file-select="data" file-loaded="myLoaded()" file-error="myError($error)" file-progress="myProgress($total,$loaded)">
     					</span>
               <br>
-              <div class="alert alert-danger" ng-show="showOutAlert">
-                    <i style="font-size:1.4em; position:absolute; right:1em" class="icon fa fa-times" ng-click="showOutAlert=!showOutAlert"></i>
-                   <h1>NOTE: Templates Deleted</h1>
-                   <p>
-                       All static templates were removed which means you will see alot of errors in the uploaded CSV file as those roles are no longer available.
-                       Please use the template generator to create your templates and define roles.
-                   </p>
-              </div>
+
               <div class="col-xs-12"  ng-show="decodedArr" style="padding:0;border:1px solid #ccc;margin-top:2em">
                   <div class="col-xs-12" style="padding:1em;box-shadow:0 2px 5px #ccc">
                       <h4 >
