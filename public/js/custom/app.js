@@ -101,17 +101,17 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
                         }
                         var loaded = event.loaded;
                         var total = event.total;
-                        $scope.imageLoading.progress = (loaded / total).toFixed(2)*100;
+                        $scope.imageLoading.progress = parseInt( ( loaded / total ) * 100 );
                     });
                   };
 
                   request.onload = function(event) {
                     console.log('loading', imageUrl);
                     $scope.imageLoading.statusType = 'loading';
+                    $scope.imageLoading.url = imageUrl;
                     request.onloadend = function(event){
                         $timeout(function(){
                             $scope.imageLoading.statusType = 'loaded';
-                            $scope.imageLoading.url = imageUrl;
                             console.log('Complete' , imageUrl);
                         } , 100);
                     };
