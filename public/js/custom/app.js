@@ -106,15 +106,17 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
                   };
 
                   request.onload = function(event) {
-                    console.log('loading', imageUrl);
-                    $scope.imageLoading.statusType = 'loading';
-                    $scope.imageLoading.url = imageUrl;
                     request.onloadend = function(event){
                         $timeout(function(){
                             $scope.imageLoading.statusType = 'loaded';
                             console.log('Complete' , imageUrl);
-                        } , 100);
+                        } , 3000);
                     };
+                    $timeout(function(){
+                      console.log('loading', imageUrl);
+                      $scope.imageLoading.statusType = 'loading';
+                      $scope.imageLoading.url = imageUrl;
+                    });
                   };
 
                   request.onerror = function(event) {
