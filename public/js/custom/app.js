@@ -90,6 +90,7 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
               //
               function loadImage(url){
                   $scope.imageLoading.url = 'phooney.png';
+                  $scope.imageLoading.statusType = 'loading';
                   var imageUrl = url;
                   //DO the xhr dance
                   var imgObj = new Image();
