@@ -19,26 +19,8 @@
      <span style="padding:0;display:inline-block; width:{{boxX}}px; height:{{boxY}}px;
         outline:1px dotted #ccc; position:absolute;left:0;top:0; margin-left:{{mL}}px; margin-top:{{mT}}px"
           ng-mousemove="recordParent($event)">
-          <div class="spinner-c" ng-show="imageLoading.status">
-              <div class="overlay" style="width:{{boxX}}px; height:{{boxY}}px;">
-                <div class="spinner">
-                    <div class="double-bounce1"></div>
-                    <div class="double-bounce2"></div>
-                </div>
-                <div class="msg">
-                    <div ng-switch on="imageLoading.statusType">
-                        <div ng-switch-when="error">
-                             Template was not loaded. Click to
-                             <button  class="btn btn-xs btn-default" ng-click="changeActiveTemplate()">
-                               retry </button> ...
-                        </div>
-                    </div>
-                </div>
-              </div>
-           </div>
-           <img ng-src="{{certTemplate.imgUrl}}" alt="" style="width:100%; z-index:-1"
-              imageloadnotifier>
-           <span class="btn btn-default" style="border-radius:0; display:inline-block;padding:.3em;
+          <awesome-img url="{{certTemplate.imgUrl}}" style="width:100%; z-index:-1" boxx="{{boxX}}" boxy="{{boxY}}"></awesome-img>
+          <span class="btn btn-default" style="border-radius:0; display:inline-block;padding:.3em;
                position:absolute; top:{{certTemplate.y}}px;left:{{certTemplate.x}}px;font-size:1.5em;
                    background-color:rgba(255 , 255 , 255, .1);border:none; box-shadow:none"
                    ng-mousemove="recordChild($event)"
