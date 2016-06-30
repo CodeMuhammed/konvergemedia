@@ -413,18 +413,24 @@ angular.module('digifyBytes' , ['ui.router' ,'mgcrea.ngStrap' , 'mgcrea.ngStrap.
       //
       function sendCert(person){
           var promise = $q.defer();
+          if(person.status == 'sent'){
+              console.log('Email already sent');
+              promise.resolve('sent');
+          }
+          else {
+              $http({
+                  method:'POST',
+                  url:'/digifyBytes/sendCert?auth='+Auth.isAuth(),
+                  data:person
+              })
+              .success(function(data){
+                   promise.resolve(data);
+              })
+              .error(function(err){
+                   promise.reject(err);
+              });
+          }
 
-          $http({
-              method:'POST',
-              url:'/digifyBytes/sendCert?auth='+Auth.isAuth(),
-              data:person
-          })
-          .success(function(data){
-               promise.resolve(data);
-          })
-          .error(function(err){
-               promise.reject(err);
-          });
 
           return promise.promise;
       }

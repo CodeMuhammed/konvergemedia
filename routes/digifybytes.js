@@ -91,7 +91,7 @@ module.exports = function(emailClient , certClient , dbResource , roles){
 													 //Squash it down to a comma seperated entity and save person to database
 													 var newPerson  = {
 															 data : [
-																	person.firstnme,
+																	person.firstname,
 																	person.lastname,
 																	person.email,
 																	person.role
