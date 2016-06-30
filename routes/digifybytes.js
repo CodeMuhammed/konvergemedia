@@ -93,7 +93,6 @@ module.exports = function(emailClient , certClient , dbResource , roles){
 															 data : [
 																	person.firstname,
 																	person.lastname,
-																	person.email,
 																	person.role
 															 ].join(','),
 															 email : person.email
