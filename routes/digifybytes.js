@@ -88,8 +88,18 @@ module.exports = function(emailClient , certClient , dbResource , roles){
 											  	res.status(500).send(err);
 											 }
 											 else{
-													 //Save user to database
-													 DigifyList.update({email:person.email} , person , {upsert:true} , function(err , stats){
+													 //Squash it down to a comma seperated entity and save person to database
+													 var newPerson  = {
+															 data : [
+																	person.firstnme,
+																	person.lastname,
+																	person.email,
+																	person.role
+															 ].join(','),
+															 email : person.email
+													 };
+
+													 DigifyList.update({email:newPerson.email} , newPerson , {upsert:true} , function(err , stats){
 														    if(err){
 																	  console.log('There was an error saving data');
 																		res.status(200).send(certImg);
