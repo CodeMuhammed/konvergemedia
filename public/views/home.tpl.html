@@ -16,9 +16,7 @@
              <div class="alert alert-warning" style="padding:1; margin-top:1em" ng-show="loginError">
                    {{loginError}}
              </div>
-             <div class="alert alert-info col-xs-12 " style="padding:">
-                You have sent 1711 certs so far. Test phase done
-             </div>
+             <button class="btn btn-primary btn-lg" ng-disabled="authentication.$invalid" ng-click="login(password)">Login</button>
           </form>
       </div>
 </div>
