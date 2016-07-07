@@ -77,7 +77,7 @@ module.exports = function(emailClient , certClient , dbResource , roles){
 	router.route('/sendCert') //add authentication rules
 	   .post(function(req , res){
 		    var person = req.body;
-				if(/*req.query.auth*/1==2){
+				if(req.query.auth){
 						getCert(person,  function(err , cert , certImg){
 								if(err){
 									res.status(500).send(err);
