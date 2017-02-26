@@ -1,5 +1,5 @@
-#DigifyBytes certificate generator
+#Certificate Generator
 This Application auto generates certificates for successful participants 
-of the Google DigifyBytes Africa Program
+of the KNVG Program
 
 Detailed specifications about implementation will be added soon.

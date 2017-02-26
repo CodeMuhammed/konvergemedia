@@ -1,227 +1,55 @@
-<div style="position: fixed;top: 0px;left: 0px;right: 0px;bottom: 0px;
-   background-color: rgba(0, 0, 0, 0.8);z-index:100000000000;" ng-hide="isAuth()">
-      <div style="height:300px; max-width:500px; margin:auto auto;
-          box-shadow:0 2px 5px #ccc; background-color:#fff;
-          margin-top:10px;text-align:center; padding:1.5em;" alt="" />
-         <img src="img/logo-pc.png" alt="" />
-         <h3>Admin Login</h3>
-         <form name="authentication" class="col-xs-12 col-sm-8 col-sm-offset-2"
-              style="margin-top:1em"
-              novalidate>
-             <div class="form-group col-xs-12" style="padding:0">
-                 <input name="password" type="password" class="form-control"
-                 required ng-model="password" placeholder="Enter password" ng-click="resetError()">
-             </div>
-             <div class="clearfix"></div>
-             <div class="alert alert-warning" style="padding:1; margin-top:1em" ng-show="loginError">
-                   {{loginError}}
-             </div>
-             <button class="btn btn-primary btn-lg btn-block" ng-disabled="authentication.$invalid" ng-click="login(password)">
-              <i class="icon fa fa-spinner fa-spinn" ng-show="authenticating"></i>
-               Login</button>
-          </form>
-      </div>
-</div>
-
-<div class="col-sm-8 col-sm-offset-2" style="text-align: left; border:1px solid #ccc;border-top:5px solid #ccc;
-    height:20em; background:#2098D1 url('img/pro.jpg') center center no-repeat; 4
-    background-size: cover;padding:0">
-    <div class="col-xs-12" style="padding:0">
-        <div class="col-xs-12" style="height:20em; background-color:rgba(0 ,0 ,0 ,.6)">
-             <img class="hidden-xs" src="img/logo-pc.png" alt="digify africa" style="height:30px; margin-top:.6em" />
-             <img class="visible-xs" src="img/logo-mob.png" alt="digify africa" style="height:30px; margin-top:.6em; position:absolute" />
-             <a class="btn btn-default navbar-btn {{view == active? 'btn-primary' :''}} pull-right"
-                ng-repeat="view in views" ng-click="setView(view)" style="margin-left:1em; border-radius:0px"
-                ng-href="{{view == 'template'? '#!/drag': '#!/'}}">
-                <span style="color:#7D3332">{{view}}</span></a>
+<div class="mdl-demo mdl-color--grey-100 mdl-color-text--grey-700 mdl-base">
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+      <header class="mdl-layout__header mdl-layout__header--scroll mdl-color--primary">
+        <div class="mdl-layout--large-screen-only mdl-layout__header-row">
         </div>
+        <div class="mdl-layout--large-screen-only mdl-layout__header-row">
+          <h3>Name &amp; Title</h3>
+        </div>
+        <div class="mdl-layout--large-screen-only mdl-layout__header-row">
+        </div>
+        <div class="mdl-layout__tab-bar mdl-js-ripple-effect mdl-color--primary-dark">
+          <a href="#overview" class="mdl-layout__tab is-active">Overview</a>
+          <a href="#bulk" class="mdl-layout__tab">Bulk</a>
+          <a href="#manual" class="mdl-layout__tab">Manual</a>
+          <button 
+            ng-click="loadBuilder()"
+            class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored mdl-shadow--4dp mdl-color--accent" id="add">
+            <i class="material-icons" role="presentation">add</i>
+            <span class="visuallyhidden">Add</span>
+          </button>
+          <div  class="mdl-tooltip mdl-tooltip--left" data-mdl-for="add">
+            Create a new certificate
+          </div>
+        </div>
+      </header>
+      <main class="mdl-layout__content">
+        <div class="mdl-layout__tab-panel is-active" id="overview">
+          <ng-include
+            src="getPartial('overview')">
+          </ng-include>
+        </div>
+        <div class="mdl-layout__tab-panel" id="bulk">
+          <ng-include
+            src="getPartial('bulk')">
+          </ng-include>
+        </div>
+         <div class="mdl-layout__tab-panel" id="manual">
+          <ng-include
+            src="getPartial('manual')">
+          </ng-include>
+        </div>
+        <footer class="mdl-mega-footer">
+          <div class="mdl-mega-footer--bottom-section">
+            <div class="mdl-logo">
+              Designed by
+            </div>
+            <ul class="mdl-mega-footer--link-list">
+              <li><a href="http://www.palingram.com">
+              Palingram Softwares</a></li>
+            </ul>
+          </div>
+        </footer>
+      </main>
     </div>
-
-</div>
-<div class="col-xs-12" style="margin-bottom:5em; padding:0">
-    <div class="col-sm-8 col-sm-offset-2" style="padding:0">
-      	<!--BULK MAILER VIEW-->
-      	<!--BULK MAILER VIEW-->
-    		 <div class="col-xs-12" ng-show="active == 'bulk'" ng-controller="bulkMailerController" style="padding:0;">
-
-              <h2>Upload a .txt or .csv file containing user details</h2>
-              <h4>
-                  <i>
-                      <span style="margin-bottom:1em;display:inline-block">Note:when submitting a .txt file, user details should be in the format per line</span>
-                      <br>
-                      <code>firstname,lastname,email,role</code> <button class="btn btn-sm btn-primary" ng-click="showIns()">
-                        <span ng-if="!instructions"> More instructions</span>
-                        <span ng-if="instructions"> Hide instructions</span>
-                      </button>
-                      <br>
-                      <br>
-                      <div class="col-xs-12" style="background-color:#FFF; border:1px solid #ccc; min-height:10em; margin-bottom:1em;padding:1em" ng-show="instructions">
-                           <h2>Bulk Mailer Instructions</h2>
-                           <p style="font-style:normal">
-                                On your spread sheet the column for "roles" specifies what kind of certificates should be sent to
-                                the individual whose detail is on that row <br><br>
-                                For example :
-                                To send a Digital 101 online certificate to a user, that users row should look like this. <br><br>
-                                <code>Merron | Jones | merronjones@gmail.com | Digital101-Online </code>
-                                <br><br>
-                                The following are a list of all available roles: <br><br>
-                                <ul>
-                                    <li>
-                                        <code>Trainer-ZA</code>
-                                    </li><br>
-                                    <li>
-                                        <code>Trainer-AfricaWide</code>
-                                    </li><br>
-                                    <li>
-                                        <code>Strategy101-ZA</code>
-                                    </li><br>
-                                    <li>
-                                        <code>Strategy101-Online</code>
-                                    </li><br>
-                                    <li>
-                                        <code>Strategy101-AfricaWide</code>
-                                    </li><br>
-                                    <li>
-                                        <code>Digital101-Online</code>
-                                    </li><br>
-                                    <li>
-                                       <code>Digital101-ZA</code>
-                                    </li><br>
-                                    <li>
-                                        <code>Digital101-AfricaWide</code>
-                                    </li><br>
-                                    <li>
-                                        <code>DigitalStrategy101-Online</code>
-                                    </li><br>
-                                    <li>
-                                        <code>DigitalStrategy101-ZA</code>
-                                    </li><br>
-                                    <li>
-                                        <code>DigitalStrategy101-AfricaWide</code>
-                                    </li><br>
-                                </ul>
-                                <br>
-                                <a href="/img/test.csv" style="dispaly:inline-block; margin-top:1em">Here's a sample .CSV file for more clarity</a>
-                           </p>
-                           <br>
-                           <p style="font-style:normal">
-                               <h2>Template Generator Instructions</h2>
-                               <p>
-                                 <p>
-                                      The roles column of the CSV file indicates the template to be used when sending a certificate to a participant. To create a certificate template, do the following
-                                      <ol>
-                                          <li>Load the template view</li>
-                                          <li>Create a template category by adding an image from dropbox</li>
-                                          <li>Drag the placeholder text to where you want the user name to appear on the template</li>
-                                          <li>Customize the font information like its size style font-face and its color to match the template theme</li>
-                                          <li>Preview to see how your template will look like when you send certificates to participants</li>
-                                          <li>Tweak by repeating steps 2-5 for maximum satisfaction</li>
-                                          <li>Save your template</li>
-                                      </ol>
-                                 </p>
-                                 <p>
-                                     Now when you proceed to the manual view, the new category will be added to the dropdown
-                                 </p>
-                               </p>
-                           </p>
-                      </div>
-                      </i>
-              </h4>
-    					<span style="">
-    						   <input type="file" ng-model="file.data" file-select="data" file-loaded="myLoaded()" file-error="myError($error)" file-progress="myProgress($total,$loaded)">
-    					</span>
-              <br>
-
-              <div class="col-xs-12"  ng-show="decodedArr" style="padding:0;border:1px solid #ccc;margin-top:2em">
-                  <div class="col-xs-12" style="padding:1em;box-shadow:0 2px 5px #ccc">
-                      <h4 >
-                          <span>
-                               Data: {{decodedArr.length}} , Errors: {{formatError()}}
-                          </span>
-                          <button class="btn btn-sm btn-primary pull-right" style="border-radius:0"
-                                 ng-click="sendBulkMails()" ng-disabled="sendingCerts || decodedArr.valid.length<=0">
-                              <span ng-show="!sendingCerts">Send certificates</span>
-                              <span ng-show="sendingCerts"><i class="icon fa fa-spinner fa-spin"></i> Sending certificates .... {{index}} of {{decodedArr.length-formatError()}}</span>
-                          </button>
-
-                      </h4>
-                  </div>
-
-                  <div class="col-xs-12" style="max-height:40em;overflow:auto; width:100%;padding:0">
-                      <table class="table table-striped table-responsive" >
-                           <thead>
-                                <th>S/N</th>
-                                <th>First Name</th>
-                                <th>Last Name</th>
-                                <th>Email</th>
-                                <th>Role</th>
-                                <th>Status</th>
-                           </thead>
-                           <tbody>
-                                <tr ng-repeat="data in decodedArr">
-                                    <td>{{data.line}}</td>
-                                    <td style="background-color:{{data.linesValid[0]?'':'#d9534f'}}; color:{{data.linesValid[0]?'#000':'#fff'}}">{{data.firstname}}</td>
-                                    <td style="background-color:{{data.linesValid[1]?'':'#d9534f'}}; color:{{data.linesValid[1]?'#000':'#fff'}}">{{data.lastname}}</td>
-                                    <td style="background-color:{{data.linesValid[2]?'':'#d9534f'}}; color:{{data.linesValid[2]?'#000':'#fff'}}">{{data.email}}</td>
-                                    <td style="background-color:{{data.linesValid[3]?'':'#d9534f'}}; color:{{data.linesValid[3]?'#000':'#fff'}}">{{data.role}}</td>
-                                    <td>{{data.status}}</td>
-                                </tr>
-                           </tbody>
-                      </table>
-                  </div>
-
-              </div>
-    		 </div>
-
-    		 <!--MANUAL MAIL VIEW-->
-    		 <!--MANUAl MAIL VIEW-->
-    		 <div class="col-xs-12" ng-show="active == 'manual'" ng-controller="manualMailerController" style="padding:0">
-    			    <h2>Send mails out manually</h2>
-    			    <div class="col-sm-6" style="padding-left:0">
-    						   <form name="manualMail" novalidate ng-submit="sendCert(person)">
-    									 <div class="form-group col-xs-12 " style="padding:0">
-    											 <label>Firstname:</label>
-    											 <input name="firstname" type="text" class="form-control"
-    											 required ng-model="person.firstname" placeholder="Enter first name">
-    									 </div>
-
-    									 <div class="form-group col-xs-12 " style="padding:0">
-    											<label>Lastname:</label>
-    											<input name="lastname" type="text" class="form-control"
-    											required ng-model="person.lastname" placeholder="Enter last name">
-    									 </div>
-
-    									 <div class="form-group col-xs-12 " style="padding:0">
-    											<label>Email:</label>
-    											<input name="email" type="email" class="form-control"
-    											required ng-model="person.email" placeholder="Enter email address">
-    									 </div>
-                       <div class="form-group col-xs-12 " style="padding:0; overflow:auto;height:30em">
-                          <label>participant's role:&nbsp;</label>
-                          <button type="button" class="btn btn-default" ng-model="person.role"
-                             data-html="0" data-toggle="true" reqiured
-                             bs-options="role as role for role in roles" bs-select>
-                             <span class="caret"></span>
-                          </button>
-
-      									 <div class="form-group col-xs-12 " style="padding:0; margin-top:2em">
-      										  <button type="submit" class="btn btn-primary btn-block"
-        											 ng-disabled="manualMail.$invalid || sendingCert">
-        											  <span ng-show="!sendingCert">Send certificate</span>
-      													<span ng-show="sendingCert"><i class="icon fa fa-spinner fa-spin"></i> loading ....</span>
-        									  </button>
-      									 </div>
-    									 </div>
-    								</form>
-    			    </div>
-    					<div class="col-sm-6" style="padding:0">
-    						    <div class="col-xs-12" style="padding:0">
-    									    <div class="alert alert-warning" ng-show="error.status">
-    									    	   {{error.msg}}
-    									    </div>
-    						    	    <img ng-src="{{certImg}}" alt="certificate preview" style="width:100%; height:20em" ng-hide="error.status"/>
-    						    </div>
-    					</div>
-    		 </div>
-    </div>
-</div>
+  </div>

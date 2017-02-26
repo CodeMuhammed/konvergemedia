@@ -1,0 +1,75 @@
+<section ng-controller="manualMailerController"
+   class="manual-mailer section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
+    <div class="header mdl-cell mdl-cell--12-col">
+        <h4>Send mails out manually</h4>
+    </div>
+    <div class="form mdl-card mdl-cell mdl-cell--6-col">
+        <div>
+            <form name="manualMail" novalidate>
+                <div class="mdl-grid mdl-cell mdl-cell--12-col">
+                    <div class="mdl-cell--12-col mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select getmdl-select__fullwidth mdl-cell--12-col">
+                        <input 
+                         class="mdl-textfield__input"
+                         type="text"
+                         id="role"
+                         ng-model="person.role"
+                         ng-readonly="true"
+                         tabIndex="-1">
+                        <label for="role" class="mdl-textfield__label">Participant's role</label>
+                        <ul style="width: 20em" for="role" class="mdl-cell--12-col mdl-menu mdl-menu--bottom-left mdl-js-menu">
+                            <li
+                             ng-repeat="role in roles"
+                             ng-click="person.role = role"
+                             class="mdl-menu__item">{{role}}</li>
+                        </ul>
+                    </div>
+                    <div class="mdl-textfield mdl-js-textfield mdl-cell--12-col  mdl-textfield--floating-label">
+                       <input
+                        id="firstname"
+                        name="firstname"
+                        type="text"
+                        class="mdl-textfield__input" 
+                        required
+                        ng-model="person.firstname">
+                        <label class="mdl-textfield__label" for="firstname">Firstname</label>
+                    </div>
+                    <div class="mdl-textfield mdl-js-textfield mdl-cell--12-col mdl-textfield--floating-label">
+                       <input
+                        id="lastname"
+                        name="lastname"
+                        type="text"
+                        class="mdl-textfield__input" 
+                        required
+                        ng-model="person.lastname">
+                        <label class="mdl-textfield__label" for="lastname">Lastname</label>
+                    </div>
+                    <div class="mdl-textfield mdl-js-textfield mdl-cell--12-col mdl-textfield--floating-label">
+                       <input
+                        id="email"
+                        name="email"
+                        type="email"
+                        class="mdl-textfield__input mdl-textfield--floating-label" 
+                        required
+                        ng-model="person.email">
+                        <label class="mdl-textfield__label" for="email">Email</label>
+                    </div>
+                </div>
+                <div class="mdl-cell mdl-cell--12-col">
+                    <div class="auth-button mdl-button mdl-js-button mdl-button--colored mdl-button--raised mdl-js-ripple-effect mdl-cell--12-col"
+                        ng-disabled="manualMail.$invalid || sendingCert" ng-click="sendCert(person)">
+                        <i ng-show="sendingCert" class="icon fa fa-spinner fa-spin"></i>
+                        Send certificate
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+     <div class="preview mdl-card mdl-cell mdl-cell--6-col">
+        <div>
+            <div class="" ng-show="error.status">
+                {{error.msg}}
+            </div>
+            <img ng-src="{{certImg}}" alt="certificate preview" style="width:100%; height:20em" ng-hide="error.status"/>
+        </div>
+    </div>
+</section>

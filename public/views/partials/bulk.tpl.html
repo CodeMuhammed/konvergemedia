@@ -1,0 +1,51 @@
+<section ng-controller="bulkMailerController"
+   class="bulk-mailer section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
+    <div class="header mdl-cell mdl-cell--12-col">
+        <span class="text">
+            Upload a .txt or .csv file containing user details
+        </span>
+        <span class="upload">
+            <input type="file" ng-model="file.data" file-select="data" file-loaded="myLoaded()" file-error="myError($error)" file-progress="myProgress($total,$loaded)">
+        </span>
+    </div>
+    <div class="sub-header mdl-cell mdl-cell--12-col" ng-show="decodedArr">
+        <span>
+            Data: {{decodedArr.length}} , Errors: {{formatError()}}
+        </span>
+        <button 
+          ng-click="sendBulkMails()" ng-disabled="sendingCerts || decodedArr.valid.length<=0"
+          class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
+            <span ng-show="!sendingCerts">Send certificates</span>
+            <span ng-show="sendingCerts">
+               <i class="icon fa fa-spinner fa-spin"></i>
+               Sending certificates .... {{index}} of {{decodedArr.length-formatError()}}
+            </span>
+        </button>
+    </div>
+   <div class="mdl-cell mdl-cell--12-col data-stat"  ng-show="decodedArr">
+        <div class="mdl-cell mdl-cell--12-col" style="max-height:40em;overflow:auto; width:100%;padding:0">
+            <table class="mdl-cell mdl-cell--12-col mdl-data-table mdl-js-data-table">
+                <thead>
+                    <tr>
+                        <th>S/N</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="data in decodedArr">
+                        <td class="mdl-data-table__cell--numeric">{{data.line}}</td>
+                        <td class="mdl-data-table__cell--non-numeric" style="background-color:{{data.linesValid[0]?'':'#d9534f'}}; color:{{data.linesValid[0]?'#000':'#fff'}}">{{data.firstname}}</td>
+                        <td class="mdl-data-table__cell--non-numeric" style="background-color:{{data.linesValid[1]?'':'#d9534f'}}; color:{{data.linesValid[1]?'#000':'#fff'}}">{{data.lastname}}</td>
+                        <td class="mdl-data-table__cell--non-numeric" style="background-color:{{data.linesValid[2]?'':'#d9534f'}}; color:{{data.linesValid[2]?'#000':'#fff'}}">{{data.email}}</td>
+                        <td class="mdl-data-table__cell--non-numeric" style="background-color:{{data.linesValid[3]?'':'#d9534f'}}; color:{{data.linesValid[3]?'#000':'#fff'}}">{{data.role}}</td>
+                        <td>{{data.status}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
