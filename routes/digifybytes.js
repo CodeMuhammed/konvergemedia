@@ -42,9 +42,9 @@ module.exports = function(emailClient , certClient , dbResource , roles){
 	//
 	function sendEmail(person , attachment , cb){
 		 console.log('sending certificate to', person.firstname , person.lastname);
-		 var htmlData = '<b>Congratulations '+person.firstname+' '+person.lastname+'</b>, <span>your Digify Africa certificate is here!</span>';
+		 var htmlData = '<b>Congratulations '+person.firstname+' '+person.lastname+'</b>, <span>your certificate is here!</span>';
 		 var attachment = attachment;
-		 var subject = 'Digify Africa Certificate';
+		 var subject = 'Konverge Media Certificate';
 		 var email = person.email;
 		 emailClient.sendEmail(htmlData , email , subject , attachment,  function(err , status){
 			  if(status){

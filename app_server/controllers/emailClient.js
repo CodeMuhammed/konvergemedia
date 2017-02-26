@@ -9,19 +9,17 @@ var auth = {
   }
 }
 
-
 module.exports = function(){
-
     function sendEmail(htmlData , email , subject , attachment ,  cb){
         //
         var nodemailerMailgun = nodemailer.createTransport(mg(auth));
     		var options = {
-    		   from: 'Digify Africa <certificate@digifyafrica.com>',
+    		   from: 'Konverge Media <certificate@knvgmedia.com>',
     		   to: email, // An array if you have multiple recipients.
     		   //cc:'hello@palingram.com',
     		   //bcc:'hello@palingram.com',
     		   subject: subject,
-    		   'h:Reply-To': 'certificate@digifyafrica.com',
+    		   'h:Reply-To': 'certificate@knvgmedia.com',
     		   html: htmlData,
     		   attachment: attachment // could also be in an array format
     		};
@@ -36,7 +34,7 @@ module.exports = function(){
     				return cb(null , info);
     			}
     		});
-  }
+    }
 
 	return {
 		sendEmail : sendEmail
