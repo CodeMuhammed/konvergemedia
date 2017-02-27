@@ -33,6 +33,9 @@ angular.module('controllersModule' , [])
           $timeout(() => {
              componentHandler.upgradeAllRegistered();
              loaded.push(view);
+             if(loaded.length === 3) {
+                 loaded = [];
+             }
           })
        }
         switch(view) {
