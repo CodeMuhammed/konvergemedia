@@ -21,21 +21,26 @@ module.exports = function(){
 			}
 			console.log('getting cert');
 			spooky.start();
-			spooky.then(function () {
+			spooky.then([{
+				baseUrl: baseUrl,
+				firstname:person.firstname,
+				lastname: person.lastname,
+				role: person.role,
+				DNF:dirNamedFile,
+				DIF:dirImgFile
+			}, function () {
 				this.viewport(1366, 768, function() {
-
-				});
-			});
-			spooky.thenOpen(baseUrl+'digifyBytes/viewCert?'+'firstname='+person.firstname+'&'+'lastname='+person.lastname+'&'+'role='+person.role+'&'+'auth='+true);
-
-			spooky.then([{DNF:dirNamedFile , DIF:dirImgFile} , function(){
-				this.waitForSelector('div.cert' , function(){
-				    this.capture(DNF+'.pdf' , undefined , {quality:100});
-					  this.capture(DIF+'.jpg' , undefined , {quality:50});
-				    this.emit('done' , 'screenshot captured');
-			    } , function(){
-						 this.emit('error' , 'screenshot captured');
+					this.thenOpen(baseUrl+'digifyBytes/viewCert?'+'firstname='+firstname+'&'+'lastname='+lastname+'&'+'role='+role+'&'+'auth='+true);
+					this.then(function() {
+						this.waitForSelector('div.cert' , function() {
+							this.capture(DNF+'.pdf' , undefined , {quality:100});
+							this.capture(DIF+'.jpg' , undefined , {quality:50});
+							this.emit('done' , 'screenshot captured');
+						}, function(){
+								this.emit('error' , 'screenshot captured');
+						});
 					});
+				});
 			}]);
 
 			spooky.run();
