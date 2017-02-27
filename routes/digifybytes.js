@@ -77,71 +77,64 @@ module.exports = function(emailClient , certClient , dbResource , roles){
 	router.route('/sendCert') //add authentication rules
 	   .post(function(req , res){
 		    var person = req.body;
-				if(req.query.auth){
-						getCert(person,  function(err , cert , certImg){
-								if(err){
-									res.status(500).send(err);
-								}
-								else{
-									sendEmail(person, cert , function(err , status){
-											 if(err){
-											  	res.status(500).send(err);
-											 }
-											 else{
-													 //Squash it down to a comma seperated entity and save person to database
-													 var newPerson  = {
-															 data : [
-																	person.firstname,
-																	person.lastname,
-																	person.role
-															 ].join(','),
-															 email : person.email
-													 };
+			if(req.query.auth){
+				getCert(person,  function(err , cert , certImg) {
+					if(err) {
+						res.status(500).send(err);
+					} else {
+						sendEmail(person, cert , function(err , status){
+							if(err) {
+							res.status(500).send(err);
+							} else {
+							//Squash it down to a comma seperated entity and save person to database
+							var newPerson  = {
+							data : [
+								person.firstname,
+								person.lastname,
+								person.role
+							].join(','),
+							email : person.email
+							};
 
-													 DigifyList.update({email:newPerson.email} , newPerson , {upsert:true} , function(err , stats){
-														    if(err){
-																	  console.log('There was an error saving data');
-																		res.status(200).send(certImg);
-																}
-																else{
-																	 res.status(200).send(certImg);
-																}
-													 });
-											 }
-									});
+							DigifyList.update({email:newPerson.email} , newPerson , {upsert:true} , function(err , stats){
+								if(err) {
+									console.log('There was an error saving data');
+									res.status(200).send(certImg);
+								} else {
+									res.status(200).send(certImg);
 								}
+							});
+							}
 						});
-				}
-				else{
-					 res.status(400).send('Cannot send certificate');
-				}
-
+					}
+				});
+			} else {
+				res.status(400).send('Cannot send certificate');
+			}
 	   });
 
 	//
 	router.route('/viewCert') //add authentication rules
-	  .get(function(req , res){
-			   if(req.query.auth && req.query.role){
-							Templates.findOne({categoryName:req.query.role} , function(err , result){
-								   if(err){
-										   res.status(400).send('Cannot view certificate db error');
-									 }
-									 else{
-										  console.log(result);
+	  .get(function(req , res) {
+		if(req.query.auth && req.query.role) {
+			Templates.findOne({categoryName:req.query.role} , function(err , result){
+				if(err) {
+					res.status(400).send('Cannot view certificate db error');
+				} else {
+					console.log(result);
 
-											//extend result to reflect firstnme lastname
-											result.firstname = req.query.firstname || 'JULIAN';
-											result.lastname = req.query.lastname || 'MAYS';
+					//extend result to reflect firstnme lastname
+					result.firstname = req.query.firstname || 'JULIAN';
+					result.lastname = req.query.lastname || 'MAYS';
 
-											//render result
-											res.render('digifycert.ejs' , result);
-									 }
-							});
-				 }
-				 else{
-					   res.status(400).send('Cannot view certificate not admin');
-				 }
-	   });
+					//render result
+					res.render('digifycert.ejs' , result);
+				}
+			});
+		} else {
+			res.status(400).send('Cannot view certificate not admin');
+		}
+	});
 
 //
 router.route('/templates')
