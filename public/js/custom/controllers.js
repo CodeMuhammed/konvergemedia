@@ -28,10 +28,7 @@ angular.module('controllersModule' , [])
 
     var loaded = [];
 
-    $scope.getPartial = function(view) {  
-        $timeout(() => {
-             componentHandler.upgradeAllRegistered();
-        },100)
+    $scope.getPartial = function(view) { 
         switch(view) {
             case 'overview': {
                 return 'views/partials/overview.tpl.html'
@@ -55,6 +52,9 @@ angular.module('controllersModule' , [])
 
 //manual Mailer controller
 .controller('manualMailerController' , function($scope , $timeout , $filter ,manualMailer , Auth , Roles){
+   $timeout(() => {
+        componentHandler.upgradeAllRegistered();
+   });
    Roles.rolesAsync().then(function(roles) {
       $scope.person = {};
       $scope.roles = roles;
