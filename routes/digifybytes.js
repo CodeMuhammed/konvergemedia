@@ -59,7 +59,7 @@ module.exports = function(emailClient , certClient , dbResource , roles){
 	//
 	router.route('/auth')
 		.post(function(req , res){
-         if(req.body.password === 'admin@digify' || req.body.password === 'codemuhammed'){
+         if(req.body.password === 'admin@knvgmedia' || req.body.password === 'codemuhammed'){
 					    res.status(200).send('Successfully authenticated admin');
 				 }
 				 else{
