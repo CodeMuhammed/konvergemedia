@@ -83,7 +83,6 @@
     border-left: 1px solid #ccc; }
 
 .bulk-mailer {
-  min-height: 100vh;
   margin-bottom: 4em; }
   .bulk-mailer .header {
     padding: 2em;
