@@ -115,21 +115,17 @@
 .bulk-mailer {
   margin-bottom: 4em;
   .header {
-    padding: 2em;
+    padding: 1em;
     position: relative;
     border-bottom: 1px solid #f2f2f2;
     padding-left: 1em;
     .text {
       display: inline-block;
       font-size: 1.5em;
+      margin-right: 2em;
     }
     .upload {
-      position: absolute;
-      border: 1px solid #f2f2f2;
       display: inline-block;
-      right: 1em;
-      top: 1em;
-      padding: 1em;
     }
   }
   .sub-header {
@@ -401,20 +397,25 @@ html, body {
 }
 
 
-.mdl-button--file input {
-  cursor: pointer;
-  height: 100%;
-  right: 0;
-  opacity: 0;
-  position: absolute;
-  top: 0;
-  width: 300px;
-  z-index: 4;
+.mdl-button--file {
+  input {
+    cursor: pointer;
+    height: 100%;
+    right: 0;
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    width: 300px;
+    z-index: 4;
+  }
 }
-.mdl-textfield--file .mdl-textfield__input {
-  box-sizing: border-box;
-  width: calc(100% - 32px);
-}
-.mdl-textfield--file .mdl-button--file {
-  right: 0;
+
+.mdl-textfield--file {
+  .mdl-textfield__input {
+    box-sizing: border-box;
+    width: calc(100% - 32px);
+  }
+  .mdl-button--file {
+    right: 0;
+  }
 }

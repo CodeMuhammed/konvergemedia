@@ -85,20 +85,16 @@
 .bulk-mailer {
   margin-bottom: 4em; }
   .bulk-mailer .header {
-    padding: 2em;
+    padding: 1em;
     position: relative;
     border-bottom: 1px solid #f2f2f2;
     padding-left: 1em; }
     .bulk-mailer .header .text {
       display: inline-block;
-      font-size: 1.5em; }
+      font-size: 1.5em;
+      margin-right: 2em; }
     .bulk-mailer .header .upload {
-      position: absolute;
-      border: 1px solid #f2f2f2;
-      display: inline-block;
-      right: 1em;
-      top: 1em;
-      padding: 1em; }
+      display: inline-block; }
   .bulk-mailer .sub-header {
     position: relative;
     padding: 1em;

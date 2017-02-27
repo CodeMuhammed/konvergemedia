@@ -5,7 +5,27 @@
             Upload a .txt or .csv file containing user details
         </span>
         <span class="upload">
-            <input type="file" ng-model="file.data" file-select="data" file-loaded="myLoaded()" file-error="myError($error)" file-progress="myProgress($total,$loaded)">
+            <form>
+                <div class="mdl-textfield mdl-js-textfield mdl-textfield--file">
+                    <input 
+                         class="mdl-textfield__input"
+                         placeholder="File"
+                         type="text"
+                         id="uploadFile"
+                         ng-model="fileName"
+                         readonly/>
+                    <div class="mdl-button mdl-button--primary mdl-button--icon mdl-button--file">
+                        <i class="material-icons">attach_file</i>
+                        <input type="file"
+                            id="uploadBtn"
+                            ng-model="file.data" 
+                            file-select="data" 
+                            file-loaded="myLoaded()" 
+                            file-error="myError($error)" 
+                            file-progress="myProgress($total,$loaded)">
+                    </div>
+                </div>
+            </form>
         </span>
     </div>
     <div class="sub-header mdl-cell mdl-cell--12-col" ng-show="decodedArr">

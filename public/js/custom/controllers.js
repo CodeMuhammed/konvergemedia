@@ -92,7 +92,8 @@ angular.module('controllersModule' , [])
 .controller('bulkMailerController' , function($scope , $window , $timeout , $interval ,  $filter , manualMailer , Auth){
       $scope.file = {};
       $scope.myLoaded = function(){
-           $timeout(function(){
+           $timeout(function() {
+             $scope.fileName = $scope.file.data.fileName.name;
              $scope.file.data.data = $scope.file.data.data.substr($scope.file.data.data.indexOf(',')+1);
              //use custom filer to format data
              Papa.parse($window.atob($scope.file.data.data) , {
