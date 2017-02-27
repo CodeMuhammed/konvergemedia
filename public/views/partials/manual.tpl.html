@@ -7,15 +7,14 @@
         <div>
             <form name="manualMail" novalidate>
                 <div class="mdl-grid mdl-cell mdl-cell--12-col">
-                    <div class="mdl-cell--12-col mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select getmdl-select__fullwidth mdl-cell--12-col">
+                    <div class="mdl-textfield mdl-js-textfield getmdl-select getmdl-select__fullwidth mdl-cell--12-col">
                         <input 
                          class="mdl-textfield__input"
                          type="text"
                          id="role"
                          ng-model="person.role"
-                         ng-readonly="true"
-                         tabIndex="-1">
-                        <label for="role" class="mdl-textfield__label">Participant's role</label>
+                         ng-readonly="true">
+                        <label for="role" class="mdl-textfield__label">.</label>
                         <ul style="width: 20em" for="role" class="mdl-cell--12-col mdl-menu mdl-menu--bottom-left mdl-js-menu">
                             <li
                              ng-repeat="role in roles"

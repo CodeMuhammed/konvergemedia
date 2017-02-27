@@ -26,10 +26,15 @@ angular.module('controllersModule' , [])
          $state.go('auth');
     }
 
-    $scope.getPartial = function(view) {
-         $timeout(() => {
-           componentHandler.upgradeAllRegistered();
-        })
+    var loaded = [];
+
+    $scope.getPartial = function(view) {  
+       if(loaded.indexOf(view) < 0) {
+          $timeout(() => {
+             componentHandler.upgradeAllRegistered();
+             loaded.push(view);
+          })
+       }
         switch(view) {
             case 'overview': {
                 return 'views/partials/overview.tpl.html'
