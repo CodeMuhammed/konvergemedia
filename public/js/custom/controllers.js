@@ -29,12 +29,9 @@ angular.module('controllersModule' , [])
     var loaded = [];
 
     $scope.getPartial = function(view) {  
-       if(loaded.indexOf(view) < 0) {
-          $timeout(() => {
+        $timeout(() => {
              componentHandler.upgradeAllRegistered();
-             loaded.push(view);
-          })
-       }
+        },100)
         switch(view) {
             case 'overview': {
                 return 'views/partials/overview.tpl.html'
