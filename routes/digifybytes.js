@@ -41,13 +41,72 @@ module.exports = function(emailClient , certClient , dbResource , roles) {
 	}
 
 	//
-	function sendEmail(person , attachment , cb){
+	router.route('/auth')
+		.post(function(req , res){
+			if(req.body.password === 'admin@knvgmedia' || req.body.password === 'codemuhammed'){
+				res.status(200).send('Successfully authenticated admin');
+			} else {
+				res.status(500).send('Failed to authenticate admin');
+			}
+	     });
+
+  //
+  router.route('/getRoles')
+ 	.get(function(req , res){
+        res.status(200).send(roles);
+    });
+
+  //
+	router.route('/sendCert') //add authentication rules
+	   .post(function(req , res){
+		    var person = req.body;
+			if(req.query.auth){
+				getCert(person, (err, cert, certImg) => {
+					if(err) {
+						res.status(500).send(err);
+					} else {
+						console.log('certificate was gotten Successfully here');
+						sendEmail(person, cert, (err, status) => {
+							if(err) {
+							   res.status(500).send(err);
+							} else {
+							//Squash it down to a comma seperated entity and save person to database
+							var newPerson  = {
+							data : [
+								person.firstname,
+								person.lastname,
+								person.role
+							].join(','),
+							email : person.email
+							};
+
+							DigifyList.update({email:newPerson.email} , newPerson , {upsert:true} , function(err , stats){
+								if(err) {
+									console.log('There was an error saving data');
+									res.status(200).send(certImg);
+								} else {
+									res.status(200).send(certImg);
+								}
+							});
+							}
+						});
+					}
+				});
+			} else {
+				res.status(400).send('Cannot send certificate');
+			}
+	   });
+
+	   //
+	  function sendEmail(person , attachment , cb) {
+		 console.log('send email called');
+		 console.log(emailClient);
 		 var htmlData = getTemplate(firstname, lastname);
 		 var attachment = attachment;
 		 var subject = 'Konverge Media Certificate';
 		 var email = person.email;
 
-		 emailClient.sendEmail(htmlData , email , subject , attachment, (err, status) => {
+		 emailClient.sendEmail(htmlData, email, subject, attachment, (err, status) => {
 			  if(status){
 				  return cb(null , status);
 			  }
@@ -103,63 +162,6 @@ module.exports = function(emailClient , certClient , dbResource , roles) {
 		</div>
 		`;
 	}
-
-	//
-	router.route('/auth')
-		.post(function(req , res){
-			if(req.body.password === 'admin@knvgmedia' || req.body.password === 'codemuhammed'){
-				res.status(200).send('Successfully authenticated admin');
-			} else {
-				res.status(500).send('Failed to authenticate admin');
-			}
-	     });
-
-  //
-  router.route('/getRoles')
- 	.get(function(req , res){
-        res.status(200).send(roles);
-    });
-
-  //
-	router.route('/sendCert') //add authentication rules
-	   .post(function(req , res){
-		    var person = req.body;
-			if(req.query.auth){
-				getCert(person, (err, cert, certImg) => {
-					if(err) {
-						res.status(500).send(err);
-					} else {
-						console.log('certificate was gotten Successfully here');
-						sendEmail(person, cert , function(err , status){
-							if(err) {
-							   res.status(500).send(err);
-							} else {
-							//Squash it down to a comma seperated entity and save person to database
-							var newPerson  = {
-							data : [
-								person.firstname,
-								person.lastname,
-								person.role
-							].join(','),
-							email : person.email
-							};
-
-							DigifyList.update({email:newPerson.email} , newPerson , {upsert:true} , function(err , stats){
-								if(err) {
-									console.log('There was an error saving data');
-									res.status(200).send(certImg);
-								} else {
-									res.status(200).send(certImg);
-								}
-							});
-							}
-						});
-					}
-				});
-			} else {
-				res.status(400).send('Cannot send certificate');
-			}
-	   });
 
 	//
 	router.route('/viewCert') //add authentication rules
