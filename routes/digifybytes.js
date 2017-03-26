@@ -104,8 +104,7 @@ module.exports = function(emailClient , certClient , dbResource , roles) {
 		 let htmlData = getTemplate(firstname, lastname);
 		 let subject = 'Konverge Media Certificate';
 		 let email = person.email;
-         emailClient.sendEmail(htmlData, email, subject, attachment, () => {});
-		 console.log('here is done called');
+		 console.log('here is done called 1');
 		 emailClient.sendEmail(htmlData, email, subject, attachment, (err, status) => {
 			  if(status){
 				  return cb(null , status);
@@ -114,6 +113,8 @@ module.exports = function(emailClient , certClient , dbResource , roles) {
 				  return cb(err , null);
 			  }
 		 });
+		 
+		 console.log('here is done called 2');
 	}
 
 	//

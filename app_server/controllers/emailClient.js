@@ -26,7 +26,7 @@ module.exports = function() {
 
     		nodemailerMailgun.sendMail(options, function (err, info) {
     			if (err) {
-                    console.log('We have an error while sending email');
+            console.log('We have an error while sending email');
     				console.log(err);
     				return cb(err , null);
     			} else {
