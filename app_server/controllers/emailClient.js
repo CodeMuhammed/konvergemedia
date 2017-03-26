@@ -10,7 +10,8 @@ var auth = {
 }
 
 module.exports = function() {
-    function sendEmail(htmlData, email, subject, attachment,  cb) {
+	return {
+		sendEmail: (htmlData, email, subject, attachment,  cb) => {
         console.log('send email called with the following data');
         console.log(htmlData, email, subject, attachment);
         var nodemailerMailgun = nodemailer.createTransport(mg(auth));
@@ -35,8 +36,5 @@ module.exports = function() {
     			}
     		});
     }
-
-	return {
-		sendEmail
 	};
 }
