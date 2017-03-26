@@ -9,8 +9,10 @@ var auth = {
   }
 }
 
-module.exports = function(){
-    function sendEmail(htmlData , email , subject , attachment ,  cb){
+module.exports = function() {
+    function sendEmail(htmlData, email, subject, attachment,  cb) {
+        console.log('send email called with the following data');
+        console.log(htmlData, email, subject, attachment);
         var nodemailerMailgun = nodemailer.createTransport(mg(auth));
     		var options = {
     		   from: 'Konverge Media <certificate@knvgmedia.com>',
@@ -23,9 +25,11 @@ module.exports = function(){
 
     		nodemailerMailgun.sendMail(options, function (err, info) {
     			if (err) {
+                    console.log('We have an error while sending email');
     				console.log(err);
     				return cb(err , null);
     			} else {
+                    console.log('Email successfully sent');
     				console.log(info);
     				return cb(null , info);
     			}
