@@ -37,6 +37,6 @@ module.exports = function() {
     }
 
 	return {
-		sendEmail : sendEmail
+		sendEmail
 	};
 }

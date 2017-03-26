@@ -4,7 +4,7 @@ var path = require('path');
 var ObjectId = require('mongodb').ObjectId;
 
 /*This api is responsible for sending certificates to digifyBytes graduates*/
-module.exports = function(emailClient , certClient , dbResource , roles){
+module.exports = function(emailClient , certClient , dbResource , roles) {
     let DigifyList = dbResource.model('DigifyList');
 	let Templates = dbResource.model('Templates');
 
@@ -26,9 +26,9 @@ module.exports = function(emailClient , certClient , dbResource , roles){
 
 	//
 	function getCert(person, cb){
-		 console.log('getting certificate for', person.firstname , person.lastname);
+	   console.log('getting certificate for', person.firstname , person.lastname);
 	   var dirNamedFile = path.join(__dirname , 'pdf' , person.firstname+person.lastname+person.role);
-		 var dirImgFile = path.join(__dirname , '../' , 'public' ,'img' , person.firstname+person.lastname+person.role);
+	   var dirImgFile = path.join(__dirname , '../' , 'public' ,'img' , person.firstname+person.lastname+person.role);
 	   certClient.getCert(person, dirNamedFile  , dirImgFile , function(err , cert , certImg){
 		  if(cert && certImg){
 			  return cb(null , cert , certImg);
@@ -41,12 +41,13 @@ module.exports = function(emailClient , certClient , dbResource , roles){
 
 	//
 	function sendEmail(person , attachment , cb){
-		 console.log('sending certificate to', person.firstname , person.lastname);
 		 var htmlData = getTemplate(firstname, lastname);
 		 var attachment = attachment;
 		 var subject = 'Konverge Media Certificate';
 		 var email = person.email;
-		 emailClient.sendEmail(htmlData , email , subject , attachment,  function(err , status){
+        
+		 console.log(emailClient);
+		 emailClient.sendEmail(htmlData , email , subject , attachment, (err, status) => {
 			  if(status){
 				  return cb(null , status);
 			  }
