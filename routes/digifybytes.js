@@ -100,12 +100,12 @@ module.exports = function(emailClient , certClient , dbResource , roles) {
 	   //
 	  function sendEmail(person , attachment , cb) {
 		 console.log('send email called');
-		 console.log(emailClient);
-		 var htmlData = getTemplate(firstname, lastname);
-		 var attachment = attachment;
-		 var subject = 'Konverge Media Certificate';
-		 var email = person.email;
 
+		 let htmlData = getTemplate(firstname, lastname);
+		 let subject = 'Konverge Media Certificate';
+		 let email = person.email;
+         emailClient.sendEmail(htmlData, email, subject, attachment, () => {});
+		 console.log('here is done called');
 		 emailClient.sendEmail(htmlData, email, subject, attachment, (err, status) => {
 			  if(status){
 				  return cb(null , status);
