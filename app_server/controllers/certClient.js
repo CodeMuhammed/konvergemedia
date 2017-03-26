@@ -1,7 +1,7 @@
 //import spookyjs
 var Spooky = require('spooky');
 var path = require('path');
-var baseUrl = process.env.NODE_ENV == 'production'? 'http://digifyBytes.herokuapp.com/' : 'http://localhost:4000/';
+var baseUrl = process.env.NODE_ENV == 'production'? 'http://knvg-cert.herokuapp.com/' : 'http://localhost:4000/';
 module.exports = function(){
 	//
 	function initSpooky(person, dirNamedFile, dirImgFile , cb){
@@ -36,8 +36,8 @@ module.exports = function(){
 							this.capture(DNF+'.pdf' , undefined , {quality:100});
 							this.capture(DIF+'.jpg' , undefined , {quality:50});
 							this.emit('done' , 'screenshot captured');
-						}, function(){
-								this.emit('error' , 'screenshot captured');
+						}, function() {
+							this.emit('error' , 'screenshot captured');
 						});
 					});
 				});
@@ -51,7 +51,8 @@ module.exports = function(){
 			if (stack) {
 				console.log('this here '+stack);
 			}
-      console.log('Here');
+
+            console.log('Here');
 			return cb(stack||e , null);
 		});
 
@@ -66,18 +67,15 @@ module.exports = function(){
 
 	//
 	function getCert(person, dirNamedFile , dirImgFile ,  cb){
-		initSpooky(person, dirNamedFile , dirImgFile , function(err , status){
-			if(err){
+		initSpooky(person, dirNamedFile, dirImgFile, (err, status) => {
+			if(err) {
 				return cb(err , null);
-			}
-			else{
-				return cb(null , dirNamedFile+'.pdf' , dirImgFile+'.jpg');
+			} else {
+				return cb(null, dirNamedFile+'.pdf' , dirImgFile+'.jpg');
 			}
 		});
 	}
 
 	//
-    return {
-	    getCert : getCert
-	};
+    return { getCert };
 }

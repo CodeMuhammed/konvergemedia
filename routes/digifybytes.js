@@ -30,11 +30,12 @@ module.exports = function(emailClient , certClient , dbResource , roles) {
 	   var dirNamedFile = path.join(__dirname , 'pdf' , person.firstname+person.lastname+person.role);
 	   var dirImgFile = path.join(__dirname , '../' , 'public' ,'img' , person.firstname+person.lastname+person.role);
 	   certClient.getCert(person, dirNamedFile  , dirImgFile , function(err , cert , certImg){
-		  if(cert && certImg){
-			  return cb(null , cert , certImg);
+		  if(cert && certImg) {
+			  return cb(null, cert, certImg);
 		  }
-		  else if(err){
-			  return cb(err , null , null);
+		  else if(err) {
+			  console.log('there was error getting certificate');
+			  return cb(err, null, null);
 		  }
 	   });
 	}
@@ -45,8 +46,7 @@ module.exports = function(emailClient , certClient , dbResource , roles) {
 		 var attachment = attachment;
 		 var subject = 'Konverge Media Certificate';
 		 var email = person.email;
-        
-		 console.log(emailClient);
+
 		 emailClient.sendEmail(htmlData , email , subject , attachment, (err, status) => {
 			  if(status){
 				  return cb(null , status);
@@ -125,10 +125,11 @@ module.exports = function(emailClient , certClient , dbResource , roles) {
 	   .post(function(req , res){
 		    var person = req.body;
 			if(req.query.auth){
-				getCert(person,  function(err , cert , certImg) {
+				getCert(person, (err, cert, certImg) => {
 					if(err) {
 						res.status(500).send(err);
 					} else {
+						console.log('certificate was gotten Successfully here');
 						sendEmail(person, cert , function(err , status){
 							if(err) {
 							   res.status(500).send(err);
