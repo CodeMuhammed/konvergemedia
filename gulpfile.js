@@ -1,6 +1,6 @@
 var gulp = require('gulp');
 var sass = require('gulp-sass');
-var exec        = require('child_process').exec;
+var exec = require('child_process').exec;
 
 gulp.task('styles', function() {
     gulp.src('public/scss/*.scss')

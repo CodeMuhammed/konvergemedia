@@ -4,7 +4,7 @@ var path = require('path');
 var ObjectId = require('mongodb').ObjectId;
 
 /*This api is responsible for sending certificates to digifyBytes graduates*/
-module.exports = function(emailClient , certClient , dbResource , roles) {
+module.exports = function(emailClient, certClient, dbResource, roles) {
     let DigifyList = dbResource.model('DigifyList');
 	let Templates = dbResource.model('Templates');
 
@@ -97,14 +97,69 @@ module.exports = function(emailClient , certClient , dbResource , roles) {
 			}
 	   });
 
+
 	   //
+	   function getTemplate(firstname, lastname) {
+		  console.log('get template called here');
+		  return `
+			<div>
+				<p>
+					Congratulations <b>${firstname} ${lastname}</b>!, your Digital Skills certificate of
+					participation is here!
+				</p>
+				<p>
+					You have completed the first step on your digital skills acquisition journey.
+					If you are wondering how to get the best out of the new stream of knowledge,
+					here are two recommended "next steps".
+					<ol>
+						<li>Use the knowledge/skills you've just been introduced to</li>
+						<li>Get even more world class knowledge, all <b>FREE</b></li>
+					</ol>
+				</p>
+				<br />
+				<br />
+				<p>
+					<h5>More! and even more!</h5>
+					<p>
+						We have aggregated the best and most succinct digital skills/social Media
+						skills resources for you.
+						<ol>
+							<li>
+								Get the Digital Skills Certificate of Completion
+								<a href="https://digitalskills.withgoogle.com/?gpid=1728512">
+									https://digitalskills.withgoogle.com/?gpid=1728512
+								</a>
+								  
+								<i>
+									<< doesnt take more than 1 hour to complete on any device (laptops, desktop, tablets & smartphones)
+								</i>
+							</li>
+							<li>
+								Download the FREE 5th Edition of Digital Marketing Textbook by Quirk Agency
+								<a href="http://www.redandyellow.co.za/wp-content/uploads/emarketing_textbook_download.pdf">
+									http://www.redandyellow.co.za/wp-content/uploads/emarketing_textbook_download.pdf
+								</a>
+							</li>
+							<li>
+								Download the <b>Primer App</b> by Google from the Google Play Store or Apple App Store 
+								<a href="https://digitalskills.withgoogle.com/?gpid=1728512">
+									https://digitalskills.withgoogle.com/?gpid=1728512
+								</a>
+							</li>
+						</ol>
+					</p>
+				</p>
+			</div>`;
+	  }
+
+	  //
 	  function sendEmail(person , attachment , cb) {
 		 console.log('send email called');
-
-		 let htmlData = getTemplate(firstname, lastname);
+         console.log('here is done called 1');
+		 let htmlData = getTemplate(person.firstname, person.lastname);
 		 let subject = 'Konverge Media Certificate';
 		 let email = person.email;
-		 console.log('here is done called 1');
+		 console.log('here is done called 2');
 		 emailClient.sendEmail(htmlData, email, subject, attachment, (err, status) => {
 			  if(status){
 				  return cb(null , status);
@@ -113,55 +168,8 @@ module.exports = function(emailClient , certClient , dbResource , roles) {
 				  return cb(err , null);
 			  }
 		 });
-		 
-		 console.log('here is done called 2');
-	}
 
-	//
-	function getTemplate(firstname, lastname) {
-		return `
-		<div>
-			<p>
-				Congratulations <b>${firstname} ${lastname}</b>!, your Digital Skills certificate of
-				participation is here!
-			</p>
-			<p>
-				You have completed the first step on your digital skills acquisition journey.
-				If you are wondering how to get the best out of the new stream of knowledge,
-				here are two recommended "next steps".
-				<ol>
-					<li>Use the knowledge/skills you've just been introduced to</li>
-					<li>Get even more world class knowledge, all <b>FREE</b></li>
-				</ol>
-			</p>
-			<br />
-			<br />
-			<p>
-				<h5>More! and even more!</h5>
-				<p>
-					We have aggregated the best and most succinct digital skills/social Media
-					skills resources for you.
-					<ol>
-						<li>
-							Get the Digital Skills Certificate of Completion 
-							https://digitalskills.withgoogle.com/?gpid=1728512  
-							<i>
-								<< doesnt take more than 1 hour to complete on any device (laptops, desktop, tablets & smartphones)
-							</i>
-						</li>
-						<li>
-							Download the FREE 5th Edition of Digital Marketing Textbook by Quirk Agency
-                            http://www.redandyellow.co.za/wp-content/uploads/emarketing_textbook_download.pdf
-						</li>
-						<li>
-							 Download the <b>Primer App</b> by Google from the Google Play Store or Apple App Store 
-							 https://digitalskills.withgoogle.com/?gpid=1728512
-						</li>
-					</ol>
-				</p>
-			</p>
-		</div>
-		`;
+		 console.log('here is done called 3');
 	}
 
 	//
